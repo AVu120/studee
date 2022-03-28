@@ -1,5 +1,5 @@
+import type { Db, MongoClientOptions } from "mongodb";
 import { MongoClient } from "mongodb";
-import type { MongoClientOptions, Db } from "mongodb";
 
 const { MONGODB_URI } = process.env;
 
