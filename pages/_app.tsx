@@ -14,9 +14,9 @@ const colors = {
 const theme = extendTheme({ colors });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <ChakraProvider theme={theme}>
+      {/* // eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} />
     </ChakraProvider>
   );

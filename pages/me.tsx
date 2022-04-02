@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import type { ChangeEvent } from "react";
-import { useState } from "react";
 
 const Me: NextPage = () => (
   <div>
