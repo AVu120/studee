@@ -9,12 +9,18 @@
     "lint": "next lint",
     "prettier": "prettier --check \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prepare": "husky install",
-    "pre-commit": "yarn lint && yarn prettier"
+    "tsc": "tsc --project ./ --noEmit ",
+    "pre-commit": "yarn lint && yarn tsc && yarn prettier"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.8.7",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint-config-airbnb-typescript": "^16.1.4",
+    "firebase": "^9.6.10",
+    "framer-motion": "^6",
     "mongodb": "^4.4.1",
     "next": "11.1.2",
     "prop-types": "^15.7.2",

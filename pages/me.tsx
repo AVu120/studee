@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 
 const Me: NextPage = () => (
   <div>
@@ -11,9 +13,9 @@ const Me: NextPage = () => (
 
     <main>
       <h1>Welcome</h1>
+      <h2>Welcome</h2>
+      <h3>Welcome</h3>
     </main>
-
-    <footer>Made with ❤️ by Anthony Hien Vu</footer>
   </div>
 );
 
