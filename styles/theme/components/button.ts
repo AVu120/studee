@@ -1,3 +1,4 @@
+import type { ComponentStyleConfig } from "@chakra-ui/theme";
 import { darken } from "@chakra-ui/theme-tools";
 
 const getSolidStyle = (color: string) => ({
@@ -38,4 +39,4 @@ export default {
   },
   // defaults values for `size` and `variant`
   defaultProps: {},
-};
+} as ComponentStyleConfig;

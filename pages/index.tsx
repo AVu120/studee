@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -50,7 +51,22 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Studee - log in or sign up</h1>
+        <Text
+          bgGradient="linear(to-l, secondary, primary)"
+          bgClip="text"
+          fontSize={["3xl", "6xl"]}
+          fontWeight="extrabold"
+          as="h1"
+        >
+          Welcome to Studee
+        </Text>
+        {/* <Text className={styles.title}
+        
+        bgGradient='linear(to-l, #7928CA, #FF0080)'
+  bgClip='text'
+  fontSize='6xl'
+  fontWeight='extrabold'
+  >Studee - log in or sign up</Text> */}
         <form
           className={styles.form}
           onSubmit={(e) => {
