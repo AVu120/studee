@@ -26,7 +26,6 @@ const Home: NextPage = () => {
     email: email === "",
     password: passwordSchema.validate(password, { details: true }),
   };
-  console.log({ errors });
 
   const changeEmail = (e: ChangeEvent<HTMLInputElement>) =>
     setEmail(e.target.value);
@@ -82,7 +81,7 @@ const Home: NextPage = () => {
               title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
             />
             {errors.password.map(({ message }) => (
-              <FormErrorMessage>{message}</FormErrorMessage>
+              <FormErrorMessage key={message}>{message}</FormErrorMessage>
             ))}
           </FormControl>
 
@@ -91,6 +90,7 @@ const Home: NextPage = () => {
             colorScheme="teal"
             type="submit"
             isDisabled={errors.email || !!errors.password.length}
+            variant="primary"
           >
             Log In
           </Button>
