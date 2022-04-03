@@ -3,6 +3,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   Text,
 } from "@chakra-ui/react";
@@ -51,15 +52,9 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Text
-          bgGradient="linear(to-l, secondary, primary)"
-          bgClip="text"
-          fontSize={["3xl", "6xl"]}
-          fontWeight="extrabold"
-          as="h1"
-        >
+        <Heading variant="h1" size="h1" as="h1">
           Welcome to Studee
-        </Text>
+        </Heading>
         {/* <Text className={styles.title}
         
         bgGradient='linear(to-l, #7928CA, #FF0080)'
