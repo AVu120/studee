@@ -1,6 +1,6 @@
 import { darken } from "@chakra-ui/theme-tools";
 
-const getSolidStyle = (color: string) => (props) => ({
+const getSolidStyle = (color: string) => ({
   bg: color,
   color: "white",
   _hover: {
