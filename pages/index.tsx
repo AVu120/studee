@@ -10,6 +10,7 @@ import Head from "next/head";
 import Image from "next/image";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import passwordSchema from "utils/validators/password";
 
 import styles from "../styles/Home.module.css";
 import connectToDatabase from "../utils/database/mongodb";
@@ -17,13 +18,30 @@ import connectToDatabase from "../utils/database/mongodb";
 const Home: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [touched, setTouched] = useState({ email: false, password: false });
+  const errors: {
+    email: boolean;
+    password: { arguments: number; message: string; validation: string }[];
+  } = {
+    email: email === "",
+    password: passwordSchema.validate(password, { details: true }),
+  };
+  console.log({ errors });
 
-  const errors = { email: email === "", password: password === "" };
-
-  const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) =>
+  const changeEmail = (e: ChangeEvent<HTMLInputElement>) =>
     setEmail(e.target.value);
-  const onChangePassword = (e: ChangeEvent<HTMLInputElement>) =>
+  const blueEmailField = () => {
+    if (!touched.email) {
+      setTouched((currentTouched) => ({ ...currentTouched, email: true }));
+    }
+  };
+  const changePassword = (e: ChangeEvent<HTMLInputElement>) =>
     setPassword(e.target.value);
+  const blurPasswordField = () => {
+    if (!touched.password) {
+      setTouched((currentTouched) => ({ ...currentTouched, password: true }));
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -41,25 +59,36 @@ const Home: NextPage = () => {
             alert("BAM");
           }}
         >
-          <FormControl isInvalid={errors.email}>
+          <FormControl isInvalid={touched.email && errors.email}>
             <FormLabel htmlFor="email">Email address</FormLabel>
-            <Input id="email" type="email" onChange={onChangeEmail} />
-            {errors.email && (
-              <FormErrorMessage>Email is required</FormErrorMessage>
-            )}
+            <Input
+              id="email"
+              type="email"
+              onChange={changeEmail}
+              onBlur={blueEmailField}
+            />
+
+            <FormErrorMessage>Email is required</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.password}>
+          <FormControl isInvalid={touched.password && !!errors.password.length}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Input id="password" type="password" onChange={onChangePassword} />
-            {errors.password && (
-              <FormErrorMessage>Password is required</FormErrorMessage>
-            )}
+            <Input
+              id="password"
+              type="password"
+              onChange={changePassword}
+              onBlur={blurPasswordField}
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+            />
+            {errors.password.map(({ message }) => (
+              <FormErrorMessage>{message}</FormErrorMessage>
+            ))}
           </FormControl>
           <Button
             mt={4}
             colorScheme="teal"
             type="submit"
-            isDisabled={errors.email || errors.password}
+            isDisabled={errors.email || !!errors.password.length}
           >
             Submit
           </Button>
