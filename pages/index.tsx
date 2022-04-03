@@ -12,7 +12,7 @@ import type { ChangeEvent } from "react";
 import { useState } from "react";
 import passwordSchema from "utils/validators/password";
 
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.scss";
 import connectToDatabase from "../utils/database/mongodb";
 
 const Home: NextPage = () => {
