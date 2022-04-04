@@ -1,7 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { getAnalytics } from "firebase/analytics";
+import {
+  // eslint-disable-next-line prettier/prettier
+  type UserCredential,
+  connectAuthEmulator,
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 // @ts-ignore
 import { initializeApp } from "utils/authentication/firebase";
+import type { ILoginWithEmailPasswordParams } from "utils/authentication/types";
+import handleAsyncErrors from "utils/helpers/errorHandling/errorHandlers";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,6 +27,26 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+connectAuthEmulator(auth, "http://localhost:9099");
+
 // initialize analytics service
+// eslint-disable-next-line import/prefer-default-export
 export const analytics = getAnalytics(app);
+
+const loginWithEmailPassword = async ({
+  email,
+  password,
+  onSuccess,
+  onFail,
+  onFinal,
+}: ILoginWithEmailPasswordParams) => {
+  handleAsyncErrors<UserCredential>({
+    func: () => signInWithEmailAndPassword(auth, email, password),
+    onSuccess,
+    onFail,
+    onFinal,
+  });
+};
