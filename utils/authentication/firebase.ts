@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { getAnalytics } from "firebase/analytics";
 import {
-  // eslint-disable-next-line prettier/prettier
   type UserCredential,
   connectAuthEmulator,
   getAuth,
@@ -26,6 +25,7 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
+const hi = "";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
