@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -55,22 +56,18 @@ const Home: NextPage = () => {
         <Heading variant="h1" size="h1" as="h1">
           Welcome to Studee
         </Heading>
-        {/* <Text className={styles.title}
-        
-        bgGradient='linear(to-l, #7928CA, #FF0080)'
-  bgClip='text'
-  fontSize='6xl'
-  fontWeight='extrabold'
-  >Studee - log in or sign up</Text> */}
+
         <form
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
-            alert("BAM");
+            alert("Login flow initiated.");
           }}
         >
           <FormControl isInvalid={touched.email && errors.email}>
-            <FormLabel htmlFor="email">Email address</FormLabel>
+            <FormLabel htmlFor="email" mb="-0.1">
+              Email address
+            </FormLabel>
             <Input
               id="email"
               type="email"
@@ -80,8 +77,13 @@ const Home: NextPage = () => {
 
             <FormErrorMessage>Email is required</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={touched.password && !!errors.password.length}>
-            <FormLabel htmlFor="password">Password</FormLabel>
+          <FormControl
+            isInvalid={touched.password && !!errors.password.length}
+            mt="2"
+          >
+            <FormLabel htmlFor="password" mb="-0.1">
+              Password
+            </FormLabel>
             <Input
               id="password"
               type="password"
@@ -97,12 +99,28 @@ const Home: NextPage = () => {
 
           <Button
             mt={4}
-            colorScheme="teal"
             type="submit"
             isDisabled={errors.email || !!errors.password.length}
             variant="primary"
           >
             Log In
+          </Button>
+          <Text
+            textStyle="a"
+            as="a"
+            mt="2"
+            onClick={() => alert("Forgot password flow initiated.")}
+          >
+            Forgot your password?
+          </Text>
+          <Divider />
+          <Button
+            mt={1}
+            type="button"
+            variant="secondary"
+            onClick={() => alert("Create account flow initiated")}
+          >
+            Create New Account
           </Button>
         </form>
       </main>
