@@ -12,6 +12,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import { login } from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import passwordSchema from "utils/validators/password";
 
@@ -60,8 +61,8 @@ const Home: NextPage = () => {
         <form
           className={styles.form}
           onSubmit={(e) => {
+            login(email, password);
             e.preventDefault();
-            alert("Login flow initiated.");
           }}
         >
           <FormControl isInvalid={touched.email && errors.email}>
