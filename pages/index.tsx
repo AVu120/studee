@@ -30,15 +30,22 @@ const Home: NextPage = () => {
     password: passwordSchema.validate(password, { details: true }),
   };
 
-  const changeEmail = (e: ChangeEvent<HTMLInputElement>) =>
+  const changeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  const blueEmailField = () => {
+    if (!touched.email)
+      setTouched((currentTouched) => ({ ...currentTouched, email: true }));
+  };
+  const blurEmailField = () => {
     if (!touched.email) {
       setTouched((currentTouched) => ({ ...currentTouched, email: true }));
     }
   };
-  const changePassword = (e: ChangeEvent<HTMLInputElement>) =>
+  const changePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    if (!touched.password) {
+      setTouched((currentTouched) => ({ ...currentTouched, password: true }));
+    }
+  };
   const blurPasswordField = () => {
     if (!touched.password) {
       setTouched((currentTouched) => ({ ...currentTouched, password: true }));
@@ -73,7 +80,7 @@ const Home: NextPage = () => {
               id="email"
               type="email"
               onChange={changeEmail}
-              onBlur={blueEmailField}
+              onBlur={blurEmailField}
             />
 
             <FormErrorMessage>Email is required</FormErrorMessage>
@@ -89,9 +96,9 @@ const Home: NextPage = () => {
               id="password"
               type="password"
               onChange={changePassword}
-              onBlur={blurPasswordField}
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+              onBlur={blurPasswordField}
             />
             {errors.password.map(({ message }) => (
               <FormErrorMessage key={message}>{message}</FormErrorMessage>
