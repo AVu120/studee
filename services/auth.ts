@@ -1,7 +1,7 @@
-const ROOT_URL = "http://localhost:3000";
+// const ROOT_URL = "http://localhost:3000";
 
-export const login = (email: string, password: string) => {
-  fetch(`${ROOT_URL}/api/auth`, {
+const login = (email: string, password: string) => {
+  fetch(`/api/auth`, {
     method: "POST",
     body: JSON.stringify({
       email,
@@ -13,4 +13,8 @@ export const login = (email: string, password: string) => {
   })
     .then((res) => console.log(res))
     .catch((error) => console.error(error));
+};
+
+export default {
+  login,
 };
