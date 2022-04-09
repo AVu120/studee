@@ -38,9 +38,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       })
       .catch((error) => {
         console.log({ error });
-        res.status(500).json({
-          message: `${error.code}: ${error.message}`,
-        });
+        res.statusMessage = error.message;
+        res.status(500).end();
       });
   } else {
     res.status(200).json({ message: "Hello World" });

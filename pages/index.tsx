@@ -13,8 +13,7 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import type { ChangeEvent } from "react";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import passwordSchema from "utils/validators/password";
@@ -28,13 +27,27 @@ const Home: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [touched, setTouched] = useState({ email: false, password: false });
-  const errors: {
-    email: boolean;
+  const [errors, setErrors] = useState<{
+    email: string;
     password: { arguments: number; message: string; validation: string }[];
-  } = {
-    email: email === "",
-    password: passwordSchema.validate(password, { details: true }),
-  };
+  }>({ email: "", password: [] });
+  const [loading, setLoading] = useState(false);
+
+  // Validate email
+  useEffect(() => {
+    setErrors((currentErrors) => ({
+      ...currentErrors,
+      email: email === "" ? "Email is required" : "",
+    }));
+  }, [email]);
+
+  // Validate password
+  useEffect(() => {
+    setErrors((currentErrors) => ({
+      ...currentErrors,
+      password: passwordSchema.validate(password, { details: true }),
+    }));
+  }, [password]);
 
   const changeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -58,6 +71,7 @@ const Home: NextPage = () => {
     }
   };
 
+  const callToActionButtonMsg = userAction === "login" ? "Log In" : "Sign Up";
   return (
     <div className={styles.container}>
       <Head>
@@ -77,11 +91,11 @@ const Home: NextPage = () => {
             e.preventDefault();
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             userAction === "login"
-              ? authService.login(email, password)
+              ? authService.login(email, password, setLoading, setErrors)
               : alert("initiate sign up flow");
           }}
         >
-          <FormControl isInvalid={touched.email && errors.email}>
+          <FormControl isInvalid={touched.email && !!errors.email}>
             <FormLabel htmlFor="email" mb="-0.1">
               Email address
             </FormLabel>
@@ -92,7 +106,7 @@ const Home: NextPage = () => {
               onBlur={blurEmailField}
             />
 
-            <FormErrorMessage>Email is required</FormErrorMessage>
+            <FormErrorMessage>{errors.email}</FormErrorMessage>
           </FormControl>
           <FormControl
             isInvalid={touched.password && !!errors.password.length}
@@ -117,10 +131,11 @@ const Home: NextPage = () => {
           <Button
             mt={4}
             type="submit"
-            isDisabled={errors.email || !!errors.password.length}
+            isDisabled={!!errors.email || !!errors.password.length}
             variant="primary"
           >
-            {userAction === "login" ? "Log In" : "Sign Up"}
+            {/* // eslint-disable-next-line no-nested-ternary */}
+            {loading ? "Loading..." : callToActionButtonMsg}
           </Button>
           {userAction === "login" ? (
             <Text
