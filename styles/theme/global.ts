@@ -11,6 +11,7 @@ export default {
     },
     a: {
       color: "teal.500",
+      _hover: { textDecoration: "underline", cursor: "pointer" },
     },
     h1: { fontSize: "3rem" },
   },

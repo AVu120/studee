@@ -1,6 +1,8 @@
 import {
+  Box,
   Button,
   Divider,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -19,6 +21,9 @@ import passwordSchema from "utils/validators/password";
 import connectToDatabase from "../utils/database/mongodb";
 
 const Home: NextPage = () => {
+  // Temporary state until later when login and signup form are moved to modals
+  // when the landing page is revamped.
+  const [userAction, setUserAction] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -69,7 +74,10 @@ const Home: NextPage = () => {
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
-            authService.login(email, password);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            userAction === "login"
+              ? authService.login(email, password)
+              : alert("initiate sign up flow");
           }}
         >
           <FormControl isInvalid={touched.email && errors.email}>
@@ -96,7 +104,7 @@ const Home: NextPage = () => {
               id="password"
               type="password"
               onChange={changePassword}
-              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
               onBlur={blurPasswordField}
             />
@@ -111,25 +119,41 @@ const Home: NextPage = () => {
             isDisabled={errors.email || !!errors.password.length}
             variant="primary"
           >
-            Log In
+            {userAction === "login" ? "Log In" : "Sign Up"}
           </Button>
-          <Text
-            textStyle="a"
-            as="a"
-            mt="2"
-            onClick={() => alert("Forgot password flow initiated.")}
-          >
-            Forgot your password?
-          </Text>
-          <Divider />
-          <Button
-            mt={1}
-            type="button"
-            variant="secondary"
-            onClick={() => alert("Create account flow initiated")}
-          >
-            Create New Account
-          </Button>
+          {userAction === "login" ? (
+            <Text
+              textStyle="a"
+              as="a"
+              mt="2"
+              onClick={() => alert("Forgot password flow initiated.")}
+            >
+              Forgot your password?
+            </Text>
+          ) : (
+            <Flex>
+              <Text mt="2" mr="1">
+                Already have an account?
+              </Text>
+              <Text as="a" mt="2" onClick={() => setUserAction("login")}>
+                Log in
+              </Text>
+            </Flex>
+          )}
+
+          {userAction === "login" && (
+            <>
+              <Divider />
+              <Button
+                mt={1}
+                type="button"
+                variant="secondary"
+                onClick={() => setUserAction("signup")}
+              >
+                Create New Account
+              </Button>
+            </>
+          )}
         </form>
       </main>
     </div>
