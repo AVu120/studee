@@ -30,18 +30,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const { email, password } = req.body;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential: UserCredential) => {
-        console.log({ userCredential });
-        // const { user } = userCredential;
         res.status(200).json({
           message: userCredential,
         });
       })
       .catch((error) => {
-        console.log({ error });
         res.statusMessage = error.message;
-        res.status(500).end();
+        return res.status(500).json(error);
       });
   } else {
     res.status(200).json({ message: "Hello World" });
   }
 }
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
