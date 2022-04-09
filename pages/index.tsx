@@ -92,7 +92,7 @@ const Home: NextPage = () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             userAction === "login"
               ? authService.login(email, password, setLoading, setErrors)
-              : alert("initiate sign up flow");
+              : authService.signUp(email, password, setLoading, setErrors);
           }}
         >
           <FormControl isInvalid={touched.email && !!errors.email}>
