@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Collapse,
   Divider,
   Flex,
   FormControl,
@@ -141,19 +142,18 @@ const Home: NextPage = () => {
             </Flex>
           )}
 
-          {userAction === "login" && (
-            <>
-              <Divider />
-              <Button
-                mt={1}
-                type="button"
-                variant="secondary"
-                onClick={() => setUserAction("signup")}
-              >
-                Create New Account
-              </Button>
-            </>
-          )}
+          <Collapse in={userAction === "login"} animateOpacity>
+            <Divider />
+            <Button
+              mt={1}
+              type="button"
+              variant="secondary"
+              onClick={() => setUserAction("signup")}
+              w="100%"
+            >
+              Create New Account
+            </Button>
+          </Collapse>
         </form>
       </main>
     </div>
