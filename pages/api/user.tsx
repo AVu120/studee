@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import {
-  type UserCredential,
   createUserWithEmailAndPassword,
   getAuth,
+  sendEmailVerification,
 } from "firebase/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -24,29 +24,28 @@ const auth = getAuth(app);
 
 // connectAuthEmulator(auth, "http://localhost:9099");
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const { email, password } = req.body;
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential: UserCredential) => {
-        console.log({ userCredential });
-        // TODO1: Never send user creds/access tokens to client so remove this later.
-        // TODO2: Send back email verification request message
-        // TODO3: Logout user.
-        // TODO4: If user is verified, follow https://javascript.plainenglish.io/next-js-firebase-authentication-including-ssr-1045b097ee18
-        // & https://firebase.google.com/docs/auth/admin/manage-cookies
-        // to create session cookie on client, redirect to /me and then parse req.cookie
-        // on getServerSideProps to verify cookie is still valid and get user data to render /me page.
-        res.status(200).json({
-          message: userCredential,
-        });
-      })
-      .catch((error) => {
-        res.statusMessage = error.message;
-        return res.status(500).json(error);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await sendEmailVerification(userCredential.user);
+      return res.status(200).json({
+        message: userCredential,
       });
+    } catch (error: any) {
+      res.statusMessage = error.message;
+      return res.status(500).json(error);
+    }
   } else {
-    res.status(200).json({ message: "Hello World" });
+    return res.status(200).json({ message: "Hello World" });
   }
 }
 
