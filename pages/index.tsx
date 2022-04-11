@@ -31,7 +31,10 @@ const Home: NextPage = () => {
     password: { arguments: number; message: string; validation: string }[];
   }>({ email: "", password: [] });
   const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState("");
+  const [notification, setNotification] = useState<{
+    title: string;
+    message: string;
+  }>({ title: "", message: "" });
 
   // Validate email
   useEffect(() => {
@@ -178,10 +181,13 @@ const Home: NextPage = () => {
         </form>
         {/* Account successfully created modal */}
         <AcknowledgementModal
-          isOpen={!!notification}
-          onClose={() => setNotification("")}
-          text={notification}
-          title="Account successfully created!"
+          isOpen={!!notification.message}
+          onClose={() => {
+            setUserAction("login");
+            setNotification({ title: "", message: "" });
+          }}
+          message={notification.message}
+          title={notification.title}
         />
       </main>
     </div>

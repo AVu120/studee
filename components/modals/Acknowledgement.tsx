@@ -13,10 +13,10 @@ import {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  text: string;
+  message: string;
   title: string;
 }
-const AcknowledgementModal = ({ isOpen, onClose, text, title }: Props) => (
+const AcknowledgementModal = ({ isOpen, onClose, message, title }: Props) => (
   <>
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -24,7 +24,7 @@ const AcknowledgementModal = ({ isOpen, onClose, text, title }: Props) => (
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <Text>{text}</Text>
+          <Text>{message}</Text>
         </ModalBody>
 
         <ModalFooter>

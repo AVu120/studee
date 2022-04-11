@@ -29,22 +29,32 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { email, password } = req.body;
     try {
+      if (Object.keys(req.body).length === 0) {
+        throw new Error("No request body");
+      }
+      if (!req.body.email) {
+        throw new Error("No email provided");
+      }
+      if (!req.body.password) {
+        throw new Error("No password provided");
+      }
+
+      const { email, password } = req.body;
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      // await sendEmailVerification(userCredential.user);
-      res.statusMessage = "User account created";
+      await sendEmailVerification(userCredential.user);
+      res.statusMessage = "User Account Created";
       return res.status(200).json({
         message:
           "A verification link has been emailed to you. Please verify your account before logging in.",
       });
     } catch (error: any) {
       res.statusMessage = error.message;
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message, random: "text" });
     }
   } else {
     return res.status(200).json({ message: "Hello World" });

@@ -53,8 +53,14 @@ const signUp = (
       password: { arguments: number; message: string; validation: string }[];
     }>
   >,
-  setNotification: Dispatch<SetStateAction<string>>
+  setNotification: Dispatch<
+    SetStateAction<{
+      title: string;
+      message: string;
+    }>
+  >
 ) => {
+  let statusText: string;
   setLoading(true);
   fetch(`/api/user`, {
     method: "POST",
@@ -68,14 +74,18 @@ const signUp = (
   })
     .then((res) => {
       console.log({ res1: res });
+      statusText = res.statusText;
       if (!res.ok) {
-        throw new Error(res.statusText);
+        throw new Error(statusText);
       }
       return res.json();
     })
     .then((res) => {
       console.log({ res2: res });
-      setNotification(res.message);
+      setNotification({
+        title: statusText,
+        message: res.message,
+      });
     })
     .catch((error) => {
       const errorMessage = error.message;
