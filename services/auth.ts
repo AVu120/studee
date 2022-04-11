@@ -52,7 +52,8 @@ const signUp = (
       email: string;
       password: { arguments: number; message: string; validation: string }[];
     }>
-  >
+  >,
+  setNotification: Dispatch<SetStateAction<string>>
 ) => {
   setLoading(true);
   fetch(`/api/user`, {
@@ -72,7 +73,10 @@ const signUp = (
       }
       return res.json();
     })
-    .then((res) => console.log({ res2: res }))
+    .then((res) => {
+      console.log({ res2: res });
+      setNotification(res.message);
+    })
     .catch((error) => {
       const errorMessage = error.message;
       setError((currentErrors) => ({ ...currentErrors, email: errorMessage }));

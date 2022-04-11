@@ -11,14 +11,13 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import AcknowledgementModal from "components/modals/Acknowledgement";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { ChangeEvent, useEffect, useState } from "react";
 import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import passwordSchema from "utils/validators/password";
-
-import connectToDatabase from "../utils/database/mongodb";
 
 const Home: NextPage = () => {
   // Temporary state until later when login and signup form are moved to modals
@@ -32,6 +31,7 @@ const Home: NextPage = () => {
     password: { arguments: number; message: string; validation: string }[];
   }>({ email: "", password: [] });
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState("");
 
   // Validate email
   useEffect(() => {
@@ -92,7 +92,13 @@ const Home: NextPage = () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             userAction === "login"
               ? authService.login(email, password, setLoading, setErrors)
-              : authService.signUp(email, password, setLoading, setErrors);
+              : authService.signUp(
+                  email,
+                  password,
+                  setLoading,
+                  setErrors,
+                  setNotification
+                );
           }}
         >
           <FormControl isInvalid={touched.email && !!errors.email}>
@@ -170,6 +176,13 @@ const Home: NextPage = () => {
             </Button>
           </Collapse>
         </form>
+        {/* Account successfully created modal */}
+        <AcknowledgementModal
+          isOpen={!!notification}
+          onClose={() => setNotification("")}
+          text={notification}
+          title="Account successfully created!"
+        />
       </main>
     </div>
   );

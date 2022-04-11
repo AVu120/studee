@@ -36,9 +36,11 @@ export default async function handler(
         email,
         password
       );
-      await sendEmailVerification(userCredential.user);
+      // await sendEmailVerification(userCredential.user);
+      res.statusMessage = "User account created";
       return res.status(200).json({
-        message: userCredential,
+        message:
+          "A verification link has been emailed to you. Please verify your account before logging in.",
       });
     } catch (error: any) {
       res.statusMessage = error.message;
