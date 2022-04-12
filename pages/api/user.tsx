@@ -33,14 +33,15 @@ export default async function handler(
       if (Object.keys(req.body).length === 0) {
         throw new Error("No request body");
       }
-      if (!req.body.email) {
+      const { email, password } = req.body;
+
+      if (email) {
         throw new Error("No email provided");
       }
-      if (!req.body.password) {
+      if (password) {
         throw new Error("No password provided");
       }
 
-      const { email, password } = req.body;
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -54,7 +55,7 @@ export default async function handler(
       });
     } catch (error: any) {
       res.statusMessage = error.message;
-      return res.status(500).json({ message: error.message, random: "text" });
+      return res.status(500).json({ message: error.message });
     }
   } else {
     return res.status(200).json({ message: "Hello World" });

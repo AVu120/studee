@@ -11,8 +11,11 @@ const login = (
       email: string;
       password: { arguments: number; message: string; validation: string }[];
     }>
-  >
+  >,
+  setNotification: Dispatch<SetStateAction<{ title: string; message: string }>>
 ) => {
+  let responseStatus: number;
+  let notificationTitle: string;
   setLoading(true);
   fetch(`/api/auth`, {
     method: "POST",
@@ -25,13 +28,27 @@ const login = (
     },
   })
     .then((res) => {
-      console.log({ res1: res });
+      // If user hasn't verified email, remind them to verify their email before logging in.
+      if (res.status === 401) {
+        responseStatus = res.status;
+        notificationTitle = res.statusText;
+        return res.json();
+      }
       if (!res.ok) {
         throw new Error(res.statusText);
       }
+
       return res.json();
     })
-    .then((res) => console.log({ res2: res }))
+    .then((res) => {
+      if (responseStatus === 401) {
+        return setNotification({
+          title: notificationTitle,
+          message: res.message,
+        });
+      }
+      return console.log({ res2: res });
+    })
     .catch((error) => {
       let errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {

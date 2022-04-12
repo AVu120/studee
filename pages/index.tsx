@@ -94,7 +94,13 @@ const Home: NextPage = () => {
             e.preventDefault();
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             userAction === "login"
-              ? authService.login(email, password, setLoading, setErrors)
+              ? authService.login(
+                  email,
+                  password,
+                  setLoading,
+                  setErrors,
+                  setNotification
+                )
               : authService.signUp(
                   email,
                   password,
