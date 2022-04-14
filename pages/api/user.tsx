@@ -23,7 +23,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // connectAuthEmulator(auth, "http://localhost:9099");
-const test;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
