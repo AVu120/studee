@@ -10,7 +10,7 @@
     "prettier": "prettier --check \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prepare": "husky install",
     "tsc": "tsc --project ./ --noEmit ",
-    "pre-commit": "yarn lint && yarn tsc && yarn prettier"
+    "pre-push": "yarn lint && yarn tsc && yarn prettier"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.7",
