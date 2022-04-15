@@ -31,7 +31,7 @@ const Landing: NextPage = () => {
   const [touched, setTouched] = useState({ email: false, password: false });
   const [errors, setErrors] = useState<{
     email: string;
-    password: { arguments: number; message: string; validation: string }[];
+    password: { arguments?: number; message: string; validation?: string }[];
   }>({ email: "", password: [] });
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{
