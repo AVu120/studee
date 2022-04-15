@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import type { NextPage, NextPageContext } from "next";
+import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
