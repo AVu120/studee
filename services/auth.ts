@@ -123,7 +123,30 @@ const signUp = (
     .finally(() => setLoading(false));
 };
 
+const logOut = (
+  setIsLoading: Dispatch<SetStateAction<boolean>>,
+  setError: Dispatch<SetStateAction<string>>,
+  router: NextRouter
+) => {
+  let statusText: string;
+  setIsLoading(true);
+  fetch(`/api/session`, {
+    method: "DELETE",
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(statusText);
+      }
+      router.push("/");
+    })
+    .catch((error) => {
+      setError(error.message);
+    })
+    .finally(() => setIsLoading(false));
+};
+
 export default {
   login,
   signUp,
+  logOut,
 };

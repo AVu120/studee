@@ -2,10 +2,6 @@ import { serialize } from "cookie";
 import admin from "firebase-admin";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-console.log({
-  "process.env.FIREBASE_PROJECT_ID": process.env.FIREBASE_PROJECT_ID,
-  "process.env.FIREBASE_PRIVATE_KEY": process.env.FIREBASE_PRIVATE_KEY,
-});
 const firebaseApp =
   // @ts-ignore
   global.firebaseApp ??
@@ -54,11 +50,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         sameSite: "strict" as const,
       };
       res.setHeader("Set-Cookie", serialize("session", sessionCookie, options));
-      return res.status(200).json({ message: "Successfully logged in!" });
+      return res.status(200).json({ message: "Successfully logged in." });
     } catch (error: any) {
       res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
+  }
+
+  if (req.method === "DELETE") {
+    res.setHeader("Set-Cookie", [
+      serialize("session", "", {
+        maxAge: -1,
+        path: "/",
+      }),
+      serialize("csrfToken", "", {
+        maxAge: -1,
+        path: "/",
+      }),
+    ]);
+
+    return res.status(200).json({ message: "Successfully logged out." });
   }
   return res.status(404).json({ message: "API not found" });
 };
