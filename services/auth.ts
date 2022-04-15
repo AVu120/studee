@@ -97,7 +97,7 @@ const signUp = (
   setError: Dispatch<
     SetStateAction<{
       email: string;
-      password: { arguments: number; message: string; validation: string }[];
+      password: { arguments?: number; message: string; validation?: string }[];
     }>
   >,
   setNotification: Dispatch<
