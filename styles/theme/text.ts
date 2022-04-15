@@ -1,3 +1,4 @@
+// Apply using textStyle="a" for example in <Text/> component.
 export default {
   a: {
     // you can also use responsive styles
