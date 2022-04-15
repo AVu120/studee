@@ -66,7 +66,7 @@ export default async function handler(
         "Set-Cookie",
         serialize("csrfToken", csrfToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV !== "development",
+          secure: true,
           maxAge: 60 * 60,
           sameSite: "strict",
           path: "/",
