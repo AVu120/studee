@@ -10,9 +10,9 @@ import { getUserData } from "./api/user";
 
 interface Props {
   email: string;
-  user_id: string;
+  USER_ID: string;
 }
-const Me: NextPage<Props> = ({ email, user_id }) => {
+const Me: NextPage<Props> = ({ email, USER_ID }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -49,8 +49,8 @@ export async function getServerSideProps({ req }: NextPageContext) {
     const [userData, error] = await getUserData(cookies.session);
 
     if (userData) {
-      const { email, user_id } = userData;
-      return { props: { email, user_id } };
+      const { email, user_id: USER_ID } = userData;
+      return { props: { email, USER_ID } };
     }
   }
 

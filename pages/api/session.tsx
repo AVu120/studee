@@ -24,7 +24,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const { idToken, csrfToken } = req.body;
-      console.log({ "req.cookies": req.cookies });
 
       // Prevent CSRF attack.
       if (csrfToken !== req.cookies.csrfToken) {
