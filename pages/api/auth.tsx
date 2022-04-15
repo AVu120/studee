@@ -20,11 +20,17 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app;
+
+// @ts-ignore
+if (!global.auth) {
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+}
 
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
+// @ts-ignore
+const auth = global.auth || getAuth(app);
 
 // connectAuthEmulator(auth, "http://localhost:9099");
 
@@ -88,3 +94,7 @@ export const config = {
     externalResolver: true,
   },
 };
+
+// Cache between requests.
+// @ts-ignore
+global.auth = auth;
