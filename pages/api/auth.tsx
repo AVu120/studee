@@ -52,7 +52,7 @@ export default async function handler(
         password
       );
       if (!userCredential.user.emailVerified) {
-        // await sendEmailVerification(userCredential.user);
+        await sendEmailVerification(userCredential.user);
         res.statusMessage = "Please Verify Email";
         return res.status(401).json({
           message:

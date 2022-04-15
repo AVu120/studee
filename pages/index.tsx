@@ -22,10 +22,11 @@ import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import passwordSchema from "utils/validators/password";
 
+type TUserAction = "login" | "signup";
 const Landing: NextPage = () => {
   // Temporary state until later when login and signup form are moved to modals
   // when the landing page is revamped.
-  const [userAction, setUserAction] = useState<"login" | "signup">("login");
+  const [userAction, setUserAction] = useState<TUserAction>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -77,6 +78,11 @@ const Landing: NextPage = () => {
     if (!touched.password) {
       setTouched((currentTouched) => ({ ...currentTouched, password: true }));
     }
+  };
+
+  const changeUserAction = (newAction: TUserAction) => {
+    setUserAction(newAction);
+    setErrors({ email: "", password: [] });
   };
 
   const callToActionButtonMsg = userAction === "login" ? "Log In" : "Sign Up";
@@ -173,7 +179,7 @@ const Landing: NextPage = () => {
               <Text mt="2" mr="1">
                 Already have an account?
               </Text>
-              <Text as="a" mt="2" onClick={() => setUserAction("login")}>
+              <Text as="a" mt="2" onClick={() => changeUserAction("login")}>
                 Log in
               </Text>
             </Flex>
@@ -185,7 +191,7 @@ const Landing: NextPage = () => {
               mt={1}
               type="button"
               variant="secondary"
-              onClick={() => setUserAction("signup")}
+              onClick={() => changeUserAction("signup")}
               w="100%"
             >
               Create New Account

@@ -49,10 +49,10 @@ export default async function handler(
       }
       const { email, password } = req.body;
 
-      if (email) {
+      if (!email) {
         throw new Error("No email provided");
       }
-      if (password) {
+      if (!password) {
         throw new Error("No password provided");
       }
 
