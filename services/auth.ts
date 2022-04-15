@@ -2,7 +2,6 @@
 
 import type { NextRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
-import { getCookie } from "utils/cookies";
 
 const login = (
   email: string,
