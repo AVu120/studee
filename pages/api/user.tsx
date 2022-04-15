@@ -4,7 +4,22 @@ import {
   getAuth,
   sendEmailVerification,
 } from "firebase/auth";
+import admin from "firebase-admin";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+const firebaseAdminApp =
+  // @ts-ignore
+  global.firebaseApp ??
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      // replace `\` and `n` character pairs w/ single `\n` character
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
+  });
+
+const adminAuth = firebaseAdminApp.auth();
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -56,9 +71,20 @@ export default async function handler(
       res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
-  } else {
-    return res.status(404).json({ message: "API not found" });
   }
+
+  return res.status(404).json({ message: "API not found" });
+}
+
+export async function getUserData(session: string) {
+  let userData;
+  let error;
+  try {
+    userData = await adminAuth.verifySessionCookie(session, true);
+  } catch (verifyError) {
+    error = verifyError;
+  }
+  return [userData, error];
 }
 
 export const config = {
@@ -66,3 +92,6 @@ export const config = {
     externalResolver: true,
   },
 };
+
+// @ts-ignore
+global.firebaseApp = firebaseAdminApp;

@@ -10,17 +10,19 @@ import {
   Heading,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import AcknowledgementModal from "components/modals/Acknowledgement";
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
 import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import passwordSchema from "utils/validators/password";
 
-const Home: NextPage = () => {
+const Landing: NextPage = () => {
   // Temporary state until later when login and signup form are moved to modals
   // when the landing page is revamped.
   const [userAction, setUserAction] = useState<"login" | "signup">("login");
@@ -37,6 +39,7 @@ const Home: NextPage = () => {
     message: string;
   }>({ title: "", message: "" });
   const router = useRouter();
+  const toast = useToast();
 
   // Validate email
   useEffect(() => {
@@ -102,7 +105,8 @@ const Home: NextPage = () => {
                   setLoading,
                   setErrors,
                   setNotification,
-                  router
+                  router,
+                  toast
                 )
               : authService.signUp(
                   email,
@@ -203,4 +207,25 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export async function getServerSideProps({ req }: NextPageContext) {
+  const { cookies } = req;
+
+  let userData;
+  let error;
+
+  if (cookies.session) {
+    [userData, error] = await getUserData(cookies.session);
+  }
+
+  if (!error && userData) {
+    return {
+      redirect: {
+        destination: "/me",
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
+}
+
+export default Landing;

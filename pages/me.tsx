@@ -1,12 +1,18 @@
 import { Button } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import auth from "services/auth";
 import styles from "styles/pages/me.module.scss";
 
-const Me: NextPage = () => {
+import { getUserData } from "./api/user";
+
+interface Props {
+  email: string;
+  user_id: string;
+}
+const Me: NextPage<Props> = ({ email, user_id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -19,7 +25,7 @@ const Me: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1>Welcome</h1>
+        <h1>{`Welcome ${email}`}</h1>
         <Button
           mt={4}
           type="submit"
@@ -36,16 +42,22 @@ const Me: NextPage = () => {
 
 export default Me;
 
-export const getServerSideProps = async () => {
-  try {
-    return {
-      props: {},
-    };
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-    return {
-      props: {},
-    };
+export async function getServerSideProps({ req }: NextPageContext) {
+  const { cookies } = req;
+
+  if (cookies.session) {
+    const [userData, error] = await getUserData(cookies.session);
+
+    if (userData) {
+      const { email, user_id } = userData;
+      return { props: { email, user_id } };
+    }
   }
-};
+
+  return {
+    redirect: {
+      destination: "/",
+      permanent: false,
+    },
+  };
+}

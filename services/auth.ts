@@ -14,7 +14,8 @@ const login = (
     }>
   >,
   setNotification: Dispatch<SetStateAction<{ title: string; message: string }>>,
-  router: NextRouter
+  router: NextRouter,
+  toast: any
 ) => {
   let responseStatus: number;
   let notificationTitle: string;
@@ -59,7 +60,16 @@ const login = (
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      }).then(() => router.push("/me"));
+      }).then(() => {
+        toast({
+          title: `You have successfully logged in`,
+          position: "top",
+          isClosable: true,
+          duration: 3000,
+          status: "success",
+        });
+        router.push("/me");
+      });
     })
     .catch((error) => {
       let errorMessage = error.message;
