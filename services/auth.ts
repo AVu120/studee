@@ -10,7 +10,7 @@ const login = (
   setError: Dispatch<
     SetStateAction<{
       email: string;
-      password: { arguments: number; message: string; validation: string }[];
+      password: { arguments?: number; message: string; validation?: string }[];
     }>
   >,
   setNotification: Dispatch<SetStateAction<{ title: string; message: string }>>,
@@ -72,12 +72,20 @@ const login = (
       });
     })
     .catch((error) => {
-      let errorMessage = error.message;
+      const errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {
-        errorMessage = "This email is not registered with us. Please sign up.";
+        setError((currentErrors) => ({
+          ...currentErrors,
+          email: "This email is not registered with us. Please sign up.",
+        }));
       }
 
-      setError((currentErrors) => ({ ...currentErrors, email: errorMessage }));
+      if (errorMessage.includes("wrong-password")) {
+        setError((currentErrors) => ({
+          ...currentErrors,
+          password: [{ message: "Wrong password." }],
+        }));
+      }
     })
     .finally(() => setLoading(false));
 };

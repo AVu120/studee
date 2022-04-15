@@ -13,7 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AcknowledgementModal from "components/modals/Acknowledgement";
-import type { NextPage, NextPageContext } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { getUserData } from "pages/api/user";
@@ -207,7 +207,7 @@ const Landing: NextPage = () => {
   );
 };
 
-export async function getServerSideProps({ req }: NextPageContext) {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { cookies } = req;
 
   let userData;
@@ -226,6 +226,6 @@ export async function getServerSideProps({ req }: NextPageContext) {
     };
   }
   return { props: {} };
-}
+};
 
 export default Landing;

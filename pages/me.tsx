@@ -42,7 +42,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
 
 export default Me;
 
-export async function getServerSideProps({ req }: NextPageContext) {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { cookies } = req;
 
   if (cookies.session) {
@@ -60,4 +60,4 @@ export async function getServerSideProps({ req }: NextPageContext) {
       permanent: false,
     },
   };
-}
+};
