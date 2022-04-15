@@ -1,3 +1,5 @@
+import { serialize } from "cookie";
+import crypto from "crypto";
 import { initializeApp } from "firebase/app";
 import {
   type UserCredential,
@@ -59,14 +61,25 @@ export default async function handler(
       }
 
       const idToken = await userCredential.user.getIdToken();
-      res.statusMessage = "Successfully logged in";
-      return res.status(200).json({ idToken });
+      const csrfToken = crypto.randomBytes(20).toString("hex");
+      res.setHeader(
+        "Set-Cookie",
+        serialize("csrfToken", csrfToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          maxAge: 60 * 60,
+          sameSite: "strict",
+          path: "/",
+        })
+      );
+      res.statusMessage = "Authentication successful";
+      return res.status(200).json({ idToken, csrfToken });
     } catch (error: any) {
       res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
   } else {
-    return res.status(200).json({ message: "Hello World" });
+    return res.status(404).json({ message: "API not found" });
   }
 }
 

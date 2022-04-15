@@ -1,6 +1,8 @@
 // const ROOT_URL = "http://localhost:3000";
 
+import type { NextRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
+import { getCookie } from "utils/cookies";
 
 const login = (
   email: string,
@@ -12,7 +14,8 @@ const login = (
       password: { arguments: number; message: string; validation: string }[];
     }>
   >,
-  setNotification: Dispatch<SetStateAction<{ title: string; message: string }>>
+  setNotification: Dispatch<SetStateAction<{ title: string; message: string }>>,
+  router: NextRouter
 ) => {
   let responseStatus: number;
   let notificationTitle: string;
@@ -47,7 +50,17 @@ const login = (
           message: res.message,
         });
       }
-      return console.log({ res2: res });
+
+      fetch(`/api/session`, {
+        method: "POST",
+        body: JSON.stringify({
+          idToken: res.idToken,
+          csrfToken: res.csrfToken,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then(() => router.push("/me"));
     })
     .catch((error) => {
       let errorMessage = error.message;

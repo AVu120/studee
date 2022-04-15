@@ -57,7 +57,7 @@ export default async function handler(
       return res.status(500).json({ message: error.message });
     }
   } else {
-    return res.status(200).json({ message: "Hello World" });
+    return res.status(404).json({ message: "API not found" });
   }
 }
 

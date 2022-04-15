@@ -14,6 +14,7 @@ import {
 import AcknowledgementModal from "components/modals/Acknowledgement";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
@@ -35,6 +36,7 @@ const Home: NextPage = () => {
     title: string;
     message: string;
   }>({ title: "", message: "" });
+  const router = useRouter();
 
   // Validate email
   useEffect(() => {
@@ -99,7 +101,8 @@ const Home: NextPage = () => {
                   password,
                   setLoading,
                   setErrors,
-                  setNotification
+                  setNotification,
+                  router
                 )
               : authService.signUp(
                   email,
