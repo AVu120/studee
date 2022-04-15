@@ -50,7 +50,13 @@ const login = (
           message: res.message,
         });
       }
-
+      toast({
+        title: `You have successfully logged in.`,
+        position: "top",
+        isClosable: true,
+        duration: 2000,
+        status: "success",
+      });
       fetch(`/api/session`, {
         method: "POST",
         body: JSON.stringify({
@@ -62,11 +68,11 @@ const login = (
         },
       }).then(() => {
         toast({
-          title: `You have successfully logged in`,
+          title: `Redirecting...`,
           position: "top",
           isClosable: true,
-          duration: 3000,
-          status: "success",
+          duration: 2000,
+          status: "info",
         });
         router.push("/me");
       });
