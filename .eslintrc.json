@@ -34,6 +34,8 @@
     // IMPORT ROLES
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+    // EXPORT RULES
+    "import/prefer-default-export":"off",
     // TYPESCRIPT RULES
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/ban-ts-comment": "warn"

@@ -11,7 +11,7 @@ if (!MONGODB_URI) {
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 
-const connectToDatabase = async () => {
+export const connectToDatabase = async () => {
   // check the cached.
   if (cachedClient && cachedDb) {
     // load from cache
@@ -38,5 +38,3 @@ const connectToDatabase = async () => {
     db: cachedDb,
   };
 };
-
-export default connectToDatabase;
