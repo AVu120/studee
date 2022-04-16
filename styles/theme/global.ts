@@ -13,6 +13,9 @@ export default {
       color: "teal.500",
       _hover: { textDecoration: "underline", cursor: "pointer" },
     },
-    h1: { fontSize: "3rem" },
+    h1: {
+      fontSize: { base: "1rem", md: "2rem", lg: "3rem" },
+      fontWeight: "bold",
+    },
   },
 };

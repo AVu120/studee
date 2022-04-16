@@ -10,7 +10,7 @@ export default {
   // styles for different visual variants ("primary", "secondary", "warning")
   variants: {
     h1: {
-      bgGradient: "linear(to-l, secondary, primary)",
+      bgGradient: "linear(to-l, tertiary, primary)",
       bgClip: "text",
       fontWeight: "extrabold",
     },
