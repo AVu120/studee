@@ -82,7 +82,7 @@ const Landing: NextPage = () => {
 
   const changeUserAction = (newAction: TUserAction) => {
     setUserAction(newAction);
-    setErrors({ email: "", password: [] });
+    // setErrors({ email: "", password: [] });
   };
 
   const callToActionButtonMsg = userAction === "login" ? "Log In" : "Sign Up";
