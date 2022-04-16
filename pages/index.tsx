@@ -82,7 +82,8 @@ const Landing: NextPage = () => {
 
   const changeUserAction = (newAction: TUserAction) => {
     setUserAction(newAction);
-    // setErrors({ email: "", password: [] });
+    setEmail("");
+    setPassword("");
   };
 
   const callToActionButtonMsg = userAction === "login" ? "Log In" : "Sign Up";
@@ -132,6 +133,7 @@ const Landing: NextPage = () => {
               type="email"
               onChange={changeEmail}
               onBlur={blurEmailField}
+              value={email}
             />
 
             <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -150,6 +152,7 @@ const Landing: NextPage = () => {
               // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
               onBlur={blurPasswordField}
+              value={password}
             />
             {errors.password.map(({ message }) => (
               <FormErrorMessage key={message}>{message}</FormErrorMessage>
