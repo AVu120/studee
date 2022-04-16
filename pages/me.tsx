@@ -40,6 +40,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
 
       <header
         className={styles.header}
+        // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
         <h1>{`Plan for ${currentDayOfWeek}, ${currentDay}/${currentMonth}/${currentYear}`}</h1>
