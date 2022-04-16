@@ -14,7 +14,7 @@ export default {
       _hover: { textDecoration: "underline", cursor: "pointer" },
     },
     h1: {
-      fontSize: { base: "1rem", md: "2rem", lg: "3rem" },
+      fontSize: { base: "1rem", md: "1.25rem", lg: "1.5rem" },
       fontWeight: "bold",
     },
   },
