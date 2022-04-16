@@ -1,38 +1,26 @@
-import type { Db, MongoClientOptions } from "mongodb";
-import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { connectToDatabase } from "server-utils/database/mongodb";
 
-const { MONGODB_URI } = process.env;
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!req.body) {
+    return res.status(400).json({ message: "No body" });
+  }
 
-// check the MongoDB URI
-if (!MONGODB_URI) {
-  throw new Error("Define the MONGODB_URI environmental variable");
-}
+  if (req.method === "PUT") {
+    try {
+      const { db } = await connectToDatabase();
 
-let cachedClient: MongoClient | null = null;
-let cachedDb: Db | null = null;
+      const { userId, startDate, ...payload } = req.body;
 
-// check the cached.
-if (cachedClient && cachedDb) {
-  // load from cache
-  return {
-    client: cachedClient,
-    db: cachedDb,
-  };
-}
+      const query = { userId, startDate };
+      const update = { $set: payload };
+      const options = { upsert: true };
 
-// Set the connection options
-const opts: MongoClientOptions = {};
-
-// Connect to cluster
-const client = new MongoClient(MONGODB_URI, opts);
-await client.connect();
-const db = client.db();
-
-// set cache
-cachedClient = client;
-cachedDb = db;
-
-export default (req: NextApiRequest, res: NextApiResponse) => {
-  req.statusCode = 200;
+      await db.collection(`weeklyPlans`).updateOne(query, update, options);
+      return res.status(200).json({ message: "Update successful" });
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+  return res.status(404).json({ message: "Not found" });
 };
