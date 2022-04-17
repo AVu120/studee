@@ -150,7 +150,8 @@ const signUp = (
 const logOut = (
   setIsLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
-  router: NextRouter
+  router: NextRouter,
+  toast: any
 ) => {
   let statusText: string;
   setIsLoading(true);
@@ -161,6 +162,13 @@ const logOut = (
       if (!res.ok) {
         throw new Error(statusText);
       }
+      toast({
+        title: `You have successfully logged out.`,
+        position: "top",
+        isClosable: true,
+        duration: 2000,
+        status: "success",
+      });
       router.push("/");
     })
     .catch((error) => {

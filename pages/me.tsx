@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { Planner } from "components/Planner";
 import { DailyPlan } from "components/Planner/DailyPlan";
 import type { GetServerSideProps, NextPage, NextPageContext } from "next";
@@ -20,6 +20,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const toast = useToast();
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -48,7 +49,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
         <Button
           type="submit"
           variant="primary"
-          onClick={() => auth.logOut(setIsLoading, setError, router)}
+          onClick={() => auth.logOut(setIsLoading, setError, router, toast)}
         >
           {/* // eslint-disable-next-line no-nested-ternary */}
           {isLoading ? "Loading..." : "Log Out "}
