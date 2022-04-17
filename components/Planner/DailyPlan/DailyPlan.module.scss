@@ -1,12 +1,15 @@
 $black-border: 1px solid black;
 
+.container {
+  border: $black-border;
+  width: 100%;
+}
 .table {
   width: 100%;
 }
 
 .tableHeaderTimeCell {
   border-left: $black-border;
-  border-right: $black-border;
 }
 .tableTaskCell {
   width: 80%;
@@ -22,7 +25,9 @@ $black-border: 1px solid black;
 }
 
 .tableTimeCell {
-  border: $black-border;
+  border-top: $black-border;
+  border-left: $black-border;
+  border-bottom: $black-border;
 }
 
 .tableTimeCellContent {

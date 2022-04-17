@@ -1,5 +1,6 @@
 import { Button } from "@chakra-ui/react";
-import { DailyPlan } from "components/Planner/DailyPlan/DailyPlan";
+import { Planner } from "components/Planner";
+import { DailyPlan } from "components/Planner/DailyPlan";
 import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 import auth from "services/auth";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
+import { daysOfWeek } from "utils/constants/dateTimes";
 
 import { getUserData } from "./api/user";
 
@@ -27,9 +29,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
   const currentDay = `${
     currentDate.getDate() < 10 ? "0" : ""
   }${currentDate.getDate()}`;
-  const currentDayOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][
-    currentDate.getDay()
-  ];
+  const currentDayOfWeek = daysOfWeek[currentDate.getDay()];
 
   return (
     <div className={styles.page}>
@@ -56,8 +56,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
       </header>
 
       <main className={styles.main}>
-        <DailyPlan />
-        {email}
+        <Planner />
       </main>
     </div>
   );
