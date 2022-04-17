@@ -1,0 +1,33 @@
+$black-border: 1px solid black;
+
+.table {
+  width: 100%;
+}
+
+.tableHeaderTimeCell {
+  border-left: $black-border;
+  border-right: $black-border;
+}
+.tableTaskCell {
+  width: 80%;
+  border-top: $black-border;
+  border-bottom: $black-border;
+}
+
+.tableTaskCellContent {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0.2rem;
+}
+
+.tableTimeCell {
+  border: $black-border;
+}
+
+.tableTimeCellContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2rem;
+}
