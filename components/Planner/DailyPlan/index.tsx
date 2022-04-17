@@ -8,6 +8,7 @@ interface Props {
   dayOfWeek: TDayOfWeek;
   date: string;
 }
+
 export const DailyPlan = ({ dayOfWeek, date }: Props) => (
   <div className={styles.container}>
     <table className={styles.table}>
