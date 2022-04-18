@@ -27,6 +27,32 @@ interface Props {
 
 export const Planner = ({ weeklyPlan }: Props) => (
   <div>
-    <DailyPlan dayOfWeek="Monday" date="17/04/2022" />
+    {/* This order of numbers is used to ensure Monday is the first day of the week. */}
+    {[1, 2, 3, 4, 5, 6, 0].map((num, i) => {
+      const { startDate } = weeklyPlan;
+      const startDateParams = startDate.split("/");
+      const [startDateYear, startDateMonth, startDateDay] = startDateParams.map(
+        (numString) => Number(numString)
+      );
+      const dateObject = new Date(
+        startDateYear,
+        startDateMonth - 1,
+        startDateDay
+      );
+
+      dateObject.setDate(dateObject.getDate() + i);
+
+      const dateString = `${dateObject.getDate()}/${
+        dateObject.getMonth() + 1
+      }/${dateObject.getFullYear()}`;
+      const dayOfWeek = daysOfWeek[num];
+      return (
+        <DailyPlan
+          dayOfWeek={dayOfWeek}
+          date={dateString}
+          data={weeklyPlan[dayOfWeek]}
+        />
+      );
+    })}
   </div>
 );

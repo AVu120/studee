@@ -37,15 +37,16 @@ export const getWeeklyPlan = async ({
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const userData = await getUserData(req.cookies.session);
-    const { user_id: userId } = userData;
+    console.log({ "req.cookies": req.cookies });
+    // const userData = await getUserData(req.cookies.session);
+    // const { user_id: userId } = userData;
 
     if (req.method === "GET") {
       if (!req.query) {
         return res.status(400).json({ message: "No query params" });
       }
 
-      const { startDate } = req.query as {
+      const { startDate, userId } = req.query as {
         userId: string;
         startDate: string;
       };
@@ -65,7 +66,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!req.body) {
         return res.status(400).json({ message: "No body" });
       }
-      const { startDate, ...payload } = req.body;
+      const { startDate, userId, ...payload } = req.body;
 
       if (!userId || !startDate) {
         return res

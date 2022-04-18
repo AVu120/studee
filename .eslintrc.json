@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "airbnb-typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "airbnb-typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:json/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -40,5 +40,6 @@
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/naming-convention": "off"
+
   }
 }

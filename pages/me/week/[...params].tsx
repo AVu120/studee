@@ -9,6 +9,7 @@ import auth from "services/auth";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
+import { emptyWeeklyPlan } from "utils/constants/weeklyPlan";
 import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import { getUserData } from "../../api/user";
@@ -49,7 +50,7 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
       </header>
 
       <main className={styles.main}>
-        <Planner weeklyPlan={weeklyPlan} />
+        <Planner weeklyPlan={weeklyPlan || emptyWeeklyPlan} />
       </main>
     </div>
   );
