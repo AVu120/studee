@@ -10,7 +10,7 @@ import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
 
-import { getUserData } from "./api/user";
+import { getUserData } from "../../api/user";
 
 interface Props {
   email: string;
@@ -22,15 +22,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
   const router = useRouter();
   const toast = useToast();
 
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = `${currentDate.getMonth() + 1 < 10 ? "0" : ""}${
-    currentDate.getMonth() + 1
-  }`;
-  const currentDay = `${
-    currentDate.getDate() < 10 ? "0" : ""
-  }${currentDate.getDate()}`;
-  const currentDayOfWeek = daysOfWeek[currentDate.getDay()];
+  console.log({ "router.query": router.query });
 
   return (
     <div className={styles.page}>
@@ -45,7 +37,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
         // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
-        <h1>{`Plan for ${currentDayOfWeek}, ${currentDay}/${currentMonth}/${currentYear}`}</h1>
+        <h1>Plan for placeholder start of week</h1>
         <Button
           type="submit"
           variant="primary"
@@ -65,9 +57,13 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
 
 export default Me;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
   const { cookies } = req;
 
+  console.log({ query });
   if (cookies.session) {
     const [userData, error] = await getUserData(cookies.session);
 
