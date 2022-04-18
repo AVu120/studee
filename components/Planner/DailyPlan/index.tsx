@@ -1,6 +1,7 @@
 import { Input } from "@chakra-ui/react";
+import { Dispatch, SetStateAction } from "react";
 import { TDayOfWeek } from "utils/types/dateTime";
-import { IDayPlan } from "utils/types/weeklyPlan";
+import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import styles from "./DailyPlan.module.scss";
 
@@ -8,10 +9,16 @@ interface Props {
   dayOfWeek: TDayOfWeek;
   date: string;
   data: IDayPlan | undefined;
+  setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>;
 }
 
-export const DailyPlan = ({ dayOfWeek, date, data }: Props) => (
-  <div key={dayOfWeek} className={styles.container}>
+export const DailyPlan = ({
+  dayOfWeek,
+  date,
+  data,
+  setWeeklyPlanState,
+}: Props) => (
+  <div className={styles.container}>
     <table className={styles.table}>
       <thead>
         <tr>
@@ -24,7 +31,7 @@ export const DailyPlan = ({ dayOfWeek, date, data }: Props) => (
           // Use of index here is fine as there's no sorting and indexes will be
           // linked to input as there will always only be 7 task inputs.
           // eslint-disable-next-line react/no-array-index-key
-          <tr key={`${dayOfWeek}-task-${i}`}>
+          <tr key={`${dayOfWeek}-task-${i + 1}`}>
             <td className={styles.tableTaskCell}>
               <Input
                 variant="unstyled"

@@ -13,7 +13,7 @@ const getSolidStyle = (color: string) => ({
 });
 
 const getOutlinedStyle = (color: string) => ({
-  bg: "transparent",
+  bg: "white",
   border: "1px solid",
   borderColor: color,
   color,

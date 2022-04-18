@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { daysOfWeek } from "utils/constants/dateTimes";
 import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
@@ -23,9 +23,10 @@ import { DailyPlan } from "./DailyPlan";
 // TODO: Do big refactor to make it more modular/maintainable/scalable and use tests to catch regressions.
 interface Props {
   weeklyPlan: IWeeklyPlan;
+  setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>;
 }
 
-export const Planner = ({ weeklyPlan }: Props) => (
+export const Planner = ({ weeklyPlan, setWeeklyPlanState }: Props) => (
   <div>
     {/* This order of numbers is used to ensure Monday is the first day of the week. */}
     {[1, 2, 3, 4, 5, 6, 0].map((num, i) => {
@@ -51,6 +52,8 @@ export const Planner = ({ weeklyPlan }: Props) => (
           dayOfWeek={dayOfWeek}
           date={dateString}
           data={weeklyPlan[dayOfWeek]}
+          setWeeklyPlanState={setWeeklyPlanState}
+          key={`${dayOfWeek}-daily-plan`}
         />
       );
     })}

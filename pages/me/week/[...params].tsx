@@ -21,20 +21,23 @@ interface Props {
   weeklyPlan: IWeeklyPlan | null;
 }
 const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
-  const savedWeeklyPlanRef = useRef(weeklyPlan);
-  const [weeklyPlanState, setWeeklyPlanState] = useState(weeklyPlan);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
-  const toast = useToast();
-
-  // console.log(router.query);
   let startDate: string;
   if (Array.isArray(router?.query?.params)) {
     startDate = getDateInUrlPath(router?.query?.params);
   } else {
     startDate = getCurrentStartDate();
   }
+
+  const savedWeeklyPlanRef = useRef(
+    weeklyPlan || getEmptyWeeklyPlan(startDate)
+  );
+  const [weeklyPlanState, setWeeklyPlanState] = useState(
+    weeklyPlan || getEmptyWeeklyPlan(startDate)
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const toast = useToast();
 
   return (
     <div className={styles.page}>
@@ -55,14 +58,21 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
           variant="primary"
           onClick={() => auth.logOut(setIsLoading, setError, router, toast)}
         >
-          {/* // eslint-disable-next-line no-nested-ternary */}
+          Save
+        </Button>
+        <Button
+          type="submit"
+          variant="secondary"
+          onClick={() => auth.logOut(setIsLoading, setError, router, toast)}
+        >
           {isLoading ? "Loading..." : "Log Out "}
         </Button>
       </header>
 
       <main className={styles.main}>
         <Planner
-          weeklyPlan={weeklyPlanState || getEmptyWeeklyPlan(startDate)}
+          weeklyPlan={weeklyPlanState}
+          setWeeklyPlanState={setWeeklyPlanState}
         />
       </main>
     </div>

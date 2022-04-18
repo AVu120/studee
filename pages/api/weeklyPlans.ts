@@ -37,7 +37,6 @@ export const getWeeklyPlan = async ({
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    console.log({ "req.cookies": req.cookies });
     // const userData = await getUserData(req.cookies.session);
     // const { user_id: userId } = userData;
 
