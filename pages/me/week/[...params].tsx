@@ -9,21 +9,20 @@ import auth from "services/auth";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
+import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import { getUserData } from "../../api/user";
 import { getWeeklyPlan } from "../../api/weeklyPlans";
 
 interface Props {
   email: string;
-  weeklyPlan: any;
+  weeklyPlan: IWeeklyPlan | null;
 }
 const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
   const toast = useToast();
-
-  console.log({ "router.query": router.query });
 
   return (
     <div className={styles.page}>
@@ -50,7 +49,7 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
       </header>
 
       <main className={styles.main}>
-        <Planner />
+        <Planner weeklyPlan={weeklyPlan} />
       </main>
     </div>
   );
@@ -61,11 +60,9 @@ export default Me;
 export const getServerSideProps: GetServerSideProps = async ({
   req,
   query,
-  res,
 }) => {
   const { cookies } = req;
 
-  console.log({ query });
   if (cookies.session) {
     const userData = await getUserData(cookies.session);
 

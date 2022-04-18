@@ -1,5 +1,6 @@
 import React from "react";
 import { daysOfWeek } from "utils/constants/dateTimes";
+import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import { DailyPlan } from "./DailyPlan";
 
@@ -20,7 +21,11 @@ import { DailyPlan } from "./DailyPlan";
 // TODO: Add integration tests at page level.
 // TODO: Add cypress tests at e2e level.
 // TODO: Do big refactor to make it more modular/maintainable/scalable and use tests to catch regressions.
-export const Planner = () => (
+interface Props {
+  weeklyPlan: IWeeklyPlan;
+}
+
+export const Planner = ({ weeklyPlan }: Props) => (
   <div>
     <DailyPlan dayOfWeek="Monday" date="17/04/2022" />
   </div>

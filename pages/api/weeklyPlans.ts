@@ -1,8 +1,9 @@
+import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "server-utils/database/mongodb";
+import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import { getUserData } from "./user";
-
 /**
  *
  * @param startdate Most recent Monday in "YYYY/MM/DD" format.
@@ -15,16 +16,22 @@ export const getWeeklyPlan = async ({
 }: {
   startDate: string;
   userId: string;
-}): Promise<any> => {
-  console.log({ startDate, userId });
+}): Promise<IWeeklyPlan | null> => {
   const { db } = await connectToDatabase();
   const year = startDate.split("/")[0];
   const weeklyPlan = await db
     .collection(`weeklyPlans${year}`)
     .findOne({ userId, startDate });
+
+  if (!weeklyPlan) return null;
   // Remove mongoDB's document _id and duplicate userId field.
   // @ts-ignore
-  const { _id, userId: userIdRemoved, ...weeklyPlanData } = weeklyPlan;
+  const {
+    _id,
+    userId: userIdRemoved,
+    ...weeklyPlanData
+  }: IWeeklyPlan & { _id: ObjectId; userId: string } = weeklyPlan;
+
   return weeklyPlanData;
 };
 

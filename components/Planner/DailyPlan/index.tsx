@@ -1,4 +1,5 @@
-import { TDayOfWeek } from "../types";
+import { TDayOfWeek } from "utils/types/dateTime";
+
 import styles from "./DailyPlan.module.scss";
 
 interface Props {
