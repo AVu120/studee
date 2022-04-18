@@ -38,6 +38,7 @@
     "import/prefer-default-export":"off",
     // TYPESCRIPT RULES
     "@typescript-eslint/no-use-before-define": ["error"],
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/naming-convention": "off"
   }
 }
