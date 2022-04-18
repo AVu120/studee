@@ -1,6 +1,3 @@
-import { Input, Text } from "@chakra-ui/react";
-import React from "react";
-
 import { TDayOfWeek } from "../types";
 import styles from "./DailyPlan.module.scss";
 

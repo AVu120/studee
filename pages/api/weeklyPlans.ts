@@ -8,7 +8,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ message: "No query params" });
       }
 
-      const { userId, startDate } = req.query;
+      const { userId, startDate } = req.query as {
+        userId: string;
+        startDate: string;
+      };
       if (!userId || !startDate) {
         return res
           .status(400)
@@ -16,8 +19,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const { db } = await connectToDatabase();
+      const year = startDate.split("/")[2];
       const weeklyPlan = await db
-        .collection("weeklyPlans")
+        .collection(`weeklyPlans${year}`)
         .findOne({ userId, startDate });
       return weeklyPlan
         ? res.status(200).json(weeklyPlan)
@@ -41,8 +45,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const query = { userId, startDate };
       const update = { $set: payload };
       const options = { upsert: true };
+      const year = startDate.split("/")[2];
 
-      await db.collection(`weeklyPlans`).updateOne(query, update, options);
+      await db
+        .collection(`weeklyPlans${year}`)
+        .updateOne(query, update, options);
       return res.status(200).json({ message: "Update successful" });
     }
     return res.status(404).json({ message: "Not found" });
