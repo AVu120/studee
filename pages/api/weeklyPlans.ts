@@ -23,6 +23,7 @@ export const getWeeklyPlan = async ({
     .collection(`weeklyPlans${year}`)
     .findOne({ userId, startDate });
   // Remove mongoDB's document _id and duplicate userId field.
+  // @ts-ignore
   const { _id, userId: userIdRemoved, ...weeklyPlanData } = weeklyPlan;
   return weeklyPlanData;
 };

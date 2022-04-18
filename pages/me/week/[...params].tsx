@@ -15,9 +15,9 @@ import { getWeeklyPlan } from "../../api/weeklyPlans";
 
 interface Props {
   email: string;
-  USER_ID: string;
+  weeklyPlan: any;
 }
-const Me: NextPage<Props> = ({ email, userId, weeklyPlan }) => {
+const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -50,7 +50,7 @@ const Me: NextPage<Props> = ({ email, userId, weeklyPlan }) => {
       </header>
 
       <main className={styles.main}>
-        <Planner startDate />
+        <Planner />
       </main>
     </div>
   );
@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       const weeklyPlan = await getWeeklyPlan({ userId, startDate });
 
       return {
-        props: { email, userId, weeklyPlan },
+        props: { email, weeklyPlan },
       };
     }
   }
