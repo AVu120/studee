@@ -20,7 +20,7 @@ import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
 import authService from "services/auth";
 import styles from "styles/pages/Home.module.scss";
-import { getStartDate } from "utils/helpers/dateTime";
+import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
 
 type TUserAction = "login" | "signup";
@@ -229,7 +229,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (userData) {
     return {
       redirect: {
-        destination: `/me/week/${getStartDate()}`,
+        destination: `/me/week/${getCurrentStartDate()}`,
         permanent: false,
       },
     };

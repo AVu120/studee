@@ -2,7 +2,7 @@
 
 import type { NextRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
-import { getStartDate } from "utils/helpers/dateTime";
+import { getCurrentStartDate } from "utils/helpers/dateTime";
 
 const login = (
   email: string,
@@ -75,7 +75,7 @@ const login = (
           duration: 2000,
           status: "info",
         });
-        router.push(`/me/week/${getStartDate()}`);
+        router.push(`/me/week/${getCurrentStartDate()}`);
       });
     })
     .catch((error) => {

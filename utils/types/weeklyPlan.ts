@@ -6,13 +6,13 @@ interface ITask {
 
 export interface IDayPlan {
   tasks?: {
-    1?: ITask;
-    2?: ITask;
-    3?: ITask;
-    4?: ITask;
-    5?: ITask;
-    6?: ITask;
-    7?: ITask;
+    "1"?: ITask;
+    "2"?: ITask;
+    "3"?: ITask;
+    "4"?: ITask;
+    "5"?: ITask;
+    "6"?: ITask;
+    "7"?: ITask;
   };
   postStudyAward?: string;
   achievements?: string[];

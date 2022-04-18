@@ -4,12 +4,13 @@ import { DailyPlan } from "components/Planner/DailyPlan";
 import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import auth from "services/auth";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
-import { emptyWeeklyPlan } from "utils/constants/weeklyPlan";
+import { getEmptyWeeklyPlan } from "utils/constants/weeklyPlan";
+import { getCurrentStartDate, getDateInUrlPath } from "utils/helpers/dateTime";
 import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 import { getUserData } from "../../api/user";
@@ -20,10 +21,20 @@ interface Props {
   weeklyPlan: IWeeklyPlan | null;
 }
 const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
+  const savedWeeklyPlanRef = useRef(weeklyPlan);
+  const [weeklyPlanState, setWeeklyPlanState] = useState(weeklyPlan);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
   const toast = useToast();
+
+  // console.log(router.query);
+  let startDate: string;
+  if (Array.isArray(router?.query?.params)) {
+    startDate = getDateInUrlPath(router?.query?.params);
+  } else {
+    startDate = getCurrentStartDate();
+  }
 
   return (
     <div className={styles.page}>
@@ -50,7 +61,9 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
       </header>
 
       <main className={styles.main}>
-        <Planner weeklyPlan={weeklyPlan || emptyWeeklyPlan} />
+        <Planner
+          weeklyPlan={weeklyPlanState || getEmptyWeeklyPlan(startDate)}
+        />
       </main>
     </div>
   );

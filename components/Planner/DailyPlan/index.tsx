@@ -1,3 +1,4 @@
+import { Input } from "@chakra-ui/react";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan } from "utils/types/weeklyPlan";
 
@@ -19,16 +20,23 @@ export const DailyPlan = ({ dayOfWeek, date, data }: Props) => (
         </tr>
       </thead>
       <tbody>
-        {Array.from({ length: 7 }).map((_, i) => (
+        {Array.from({ length: 2 }).map((_: any, i: number) => (
           // Use of index here is fine as there's no sorting and indexes will be
           // linked to input as there will always only be 7 task inputs.
           // eslint-disable-next-line react/no-array-index-key
           <tr key={`${dayOfWeek}-task-${i}`}>
             <td className={styles.tableTaskCell}>
-              <div className={styles.tableTaskCellContent}>Task Input</div>
+              <Input
+                variant="unstyled"
+                placeholder={`Task ${i + 1}`}
+                // @ts-ignore
+                value={data?.tasks?.[`${i + 1}`]?.name}
+                onChange={() => {}}
+              />
+              {/* <span className={styles.tableTaskCellContent}>Task Input</span> */}
             </td>
             <td className={styles.tableTimeCell}>
-              <div className={styles.tableTimeCellContent}>Time</div>
+              <span className={styles.tableTimeCellContent}>Time</span>
             </td>
           </tr>
         ))}

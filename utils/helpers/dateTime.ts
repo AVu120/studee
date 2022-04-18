@@ -2,7 +2,7 @@
  * Get date string of most recent Monday (aka start of week).
  * @returns Date string in YYYY/MM/DD format.
  */
-export const getStartDate = () => {
+export const getCurrentStartDate = () => {
   const startDate = new Date();
   // If today's date is not a Monday.
   if (startDate.getDay() !== 1) {
@@ -16,3 +16,6 @@ export const getStartDate = () => {
     startDate.getMonth() + 1
   }/${startDate.getDate()}`;
 };
+
+export const getDateInUrlPath = (queryParams: string[]) =>
+  `${queryParams[0]}/${queryParams[1]}/${queryParams[2]}`;

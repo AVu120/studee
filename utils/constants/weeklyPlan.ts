@@ -1,5 +1,5 @@
 import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
-export const emptyWeeklyPlan: IWeeklyPlan = {
-  startDate: "",
-};
+export const getEmptyWeeklyPlan = (startDate: string): IWeeklyPlan => ({
+  startDate,
+});
