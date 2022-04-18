@@ -1,14 +1,43 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "server-utils/database/mongodb";
 
+import { getUserData } from "./user";
+
+/**
+ *
+ * @param startdate Most recent Monday in "YYYY/MM/DD" format.
+ * @param userId ID of logged in user.
+ * @returns Plan data for the week starting on startDate.
+ */
+export const getWeeklyPlan = async ({
+  startDate,
+  userId,
+}: {
+  startDate: string;
+  userId: string;
+}): Promise<any> => {
+  console.log({ startDate, userId });
+  const { db } = await connectToDatabase();
+  const year = startDate.split("/")[0];
+  const weeklyPlan = await db
+    .collection(`weeklyPlans${year}`)
+    .findOne({ userId, startDate });
+  // Remove mongoDB's document _id and duplicate userId field.
+  const { _id, userId: userIdRemoved, ...weeklyPlanData } = weeklyPlan;
+  return weeklyPlanData;
+};
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const userData = await getUserData(req.cookies.session);
+    const { user_id: userId } = userData;
+
     if (req.method === "GET") {
       if (!req.query) {
         return res.status(400).json({ message: "No query params" });
       }
 
-      const { userId, startDate } = req.query as {
+      const { startDate } = req.query as {
         userId: string;
         startDate: string;
       };
@@ -18,11 +47,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .json({ message: `No ${!userId ? "userId" : "startDate"}` });
       }
 
-      const { db } = await connectToDatabase();
-      const year = startDate.split("/")[2];
-      const weeklyPlan = await db
-        .collection(`weeklyPlans${year}`)
-        .findOne({ userId, startDate });
+      const weeklyPlan = await getWeeklyPlan({ userId, startDate });
       return weeklyPlan
         ? res.status(200).json(weeklyPlan)
         : res.status(404).json("Not found");
@@ -32,7 +57,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!req.body) {
         return res.status(400).json({ message: "No body" });
       }
-      const { userId, startDate, ...payload } = req.body;
+      const { startDate, ...payload } = req.body;
 
       if (!userId || !startDate) {
         return res
@@ -45,7 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const query = { userId, startDate };
       const update = { $set: payload };
       const options = { upsert: true };
-      const year = startDate.split("/")[2];
+      const year = startDate.split("/")[0];
 
       await db
         .collection(`weeklyPlans${year}`)

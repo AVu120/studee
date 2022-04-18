@@ -77,14 +77,7 @@ export default async function handler(
 }
 
 export async function getUserData(session: string) {
-  let userData;
-  let error;
-  try {
-    userData = await adminAuth.verifySessionCookie(session, true);
-  } catch (verifyError) {
-    error = verifyError;
-  }
-  return [userData, error];
+  return adminAuth.verifySessionCookie(session, true);
 }
 
 export const config = {

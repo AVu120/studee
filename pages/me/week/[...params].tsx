@@ -11,12 +11,13 @@ import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
 
 import { getUserData } from "../../api/user";
+import { getWeeklyPlan } from "../../api/weeklyPlans";
 
 interface Props {
   email: string;
   USER_ID: string;
 }
-const Me: NextPage<Props> = ({ email, USER_ID }) => {
+const Me: NextPage<Props> = ({ email, userId, weeklyPlan }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -49,7 +50,7 @@ const Me: NextPage<Props> = ({ email, USER_ID }) => {
       </header>
 
       <main className={styles.main}>
-        <Planner />
+        <Planner startDate />
       </main>
     </div>
   );
@@ -60,16 +61,25 @@ export default Me;
 export const getServerSideProps: GetServerSideProps = async ({
   req,
   query,
+  res,
 }) => {
   const { cookies } = req;
 
   console.log({ query });
   if (cookies.session) {
-    const [userData, error] = await getUserData(cookies.session);
+    const userData = await getUserData(cookies.session);
 
     if (userData) {
-      const { email, user_id: USER_ID } = userData;
-      return { props: { email, USER_ID } };
+      const { email, user_id: userId } = userData;
+
+      const { params } = query as { params: string[] };
+      const startDate = `${params[0]}/${params[1]}/${params[2]}`;
+
+      const weeklyPlan = await getWeeklyPlan({ userId, startDate });
+
+      return {
+        props: { email, userId, weeklyPlan },
+      };
     }
   }
 

@@ -221,13 +221,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const { cookies } = req;
 
   let userData;
-  let error;
 
   if (cookies.session) {
-    [userData, error] = await getUserData(cookies.session);
+    userData = await getUserData(cookies.session);
   }
 
-  if (!error && userData) {
+  if (userData) {
     return {
       redirect: {
         destination: `/me/week/${getStartDate()}`,

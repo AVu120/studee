@@ -22,6 +22,6 @@ import { DailyPlan } from "./DailyPlan";
 // TODO: Do big refactor to make it more modular/maintainable/scalable and use tests to catch regressions.
 export const Planner = () => (
   <div>
-    <DailyPlan dayOfWeek={daysOfWeek[1]} date="17/04/2022" />
+    <DailyPlan dayOfWeek="Monday" date="17/04/2022" />
   </div>
 );
