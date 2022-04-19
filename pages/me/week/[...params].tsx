@@ -22,23 +22,43 @@ interface Props {
 }
 const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const router = useRouter();
-  let startDate: string;
+
+  /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.  */
+  let emptyStartDate: string;
   if (Array.isArray(router?.query?.params)) {
-    startDate = getDateInUrlPath(router?.query?.params);
+    emptyStartDate = getDateInUrlPath(router?.query?.params);
   } else {
-    startDate = getCurrentStartDate();
+    emptyStartDate = getCurrentStartDate();
   }
 
   const savedWeeklyPlanRef = useRef(
-    weeklyPlan || getEmptyWeeklyPlan(startDate)
+    weeklyPlan || getEmptyWeeklyPlan(emptyStartDate)
   );
   const [weeklyPlanState, setWeeklyPlanState] = useState(
-    weeklyPlan || getEmptyWeeklyPlan(startDate)
+    weeklyPlan || getEmptyWeeklyPlan(emptyStartDate)
   );
+
+  const [startDateYear, startDateMonth, startDateDay] =
+    weeklyPlanState.startDate.split("/").map((numString) => Number(numString));
+  const startDateString = `${startDateDay}/${startDateMonth}/${startDateYear}`;
+  const endDateObject = new Date(
+    startDateYear,
+    startDateMonth - 1,
+    startDateDay
+  );
+  endDateObject.setDate(endDateObject.getDate() + 6);
+  const endDateString = `${endDateObject.getDate()}/${
+    endDateObject.getMonth() + 1
+  }/${endDateObject.getFullYear()}`;
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const toast = useToast();
 
+  console.log({
+    "savedWeeklyPlanRef.current": savedWeeklyPlanRef.current,
+    weeklyPlanState,
+  });
   return (
     <div className={styles.page}>
       <Head>
@@ -52,11 +72,11 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
-        <h1>Plan for placeholder start of week</h1>
+        <h1>{`Week of Mon ${startDateString} to Sun ${endDateString}`}</h1>
         <Button
           type="submit"
           variant="primary"
-          onClick={() => auth.logOut(setIsLoading, setError, router, toast)}
+          onClick={() => alert("initiate save workflow")}
         >
           Save
         </Button>
@@ -75,6 +95,14 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
           setWeeklyPlanState={setWeeklyPlanState}
         />
       </main>
+
+      <footer
+        className={styles.footer}
+        // @ts-ignore
+        style={{ "--bgColor": colors.secondary }}
+      >
+        Footer
+      </footer>
     </div>
   );
 };
