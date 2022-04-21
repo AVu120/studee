@@ -4,7 +4,7 @@ import type { NextRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 
-const login = (
+export const login = (
   email: string,
   password: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -97,7 +97,7 @@ const login = (
     .finally(() => setLoading(false));
 };
 
-const signUp = (
+export const signUp = (
   email: string,
   password: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -148,7 +148,7 @@ const signUp = (
     .finally(() => setLoading(false));
 };
 
-const logOut = (
+export const logOut = (
   setIsLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
   router: NextRouter,
@@ -176,10 +176,4 @@ const logOut = (
       setError(error.message);
     })
     .finally(() => setIsLoading(false));
-};
-
-export default {
-  login,
-  signUp,
-  logOut,
 };

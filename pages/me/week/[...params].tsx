@@ -5,7 +5,7 @@ import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import auth from "services/auth";
+import { login, logOut, signUp } from "services/auth";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
@@ -37,6 +37,17 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [weeklyPlanState, setWeeklyPlanState] = useState(
     weeklyPlan || getEmptyWeeklyPlan(emptyStartDate)
   );
+  const [hasUnsavedChanges, setHasUnsavedChanged] = useState(false);
+
+  useEffect(() => {
+    if (
+      !hasUnsavedChanges &&
+      JSON.stringify(weeklyPlanState) !==
+        JSON.stringify(savedWeeklyPlanRef.current)
+    ) {
+      setHasUnsavedChanged(true);
+    }
+  }, [weeklyPlanState]);
 
   const [startDateYear, startDateMonth, startDateDay] =
     weeklyPlanState.startDate.split("/").map((numString) => Number(numString));
@@ -55,10 +66,6 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [error, setError] = useState("");
   const toast = useToast();
 
-  console.log({
-    "savedWeeklyPlanRef.current": savedWeeklyPlanRef.current,
-    weeklyPlanState,
-  });
   return (
     <div className={styles.page}>
       <Head>
@@ -77,13 +84,17 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
           type="submit"
           variant="primary"
           onClick={() => alert("initiate save workflow")}
+          disabled={
+            JSON.stringify(weeklyPlanState) ===
+            JSON.stringify(savedWeeklyPlanRef.current)
+          }
         >
           Save
         </Button>
         <Button
           type="submit"
           variant="secondary"
-          onClick={() => auth.logOut(setIsLoading, setError, router, toast)}
+          onClick={() => logOut(setIsLoading, setError, router, toast)}
         >
           {isLoading ? "Loading..." : "Log Out "}
         </Button>

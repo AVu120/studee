@@ -18,7 +18,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
-import authService from "services/auth";
+import { login, signUp } from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
@@ -107,7 +107,7 @@ const Landing: NextPage = () => {
             e.preventDefault();
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             userAction === "login"
-              ? authService.login(
+              ? login(
                   email,
                   password,
                   setLoading,
@@ -116,13 +116,7 @@ const Landing: NextPage = () => {
                   router,
                   toast
                 )
-              : authService.signUp(
-                  email,
-                  password,
-                  setLoading,
-                  setErrors,
-                  setNotification
-                );
+              : signUp(email, password, setLoading, setErrors, setNotification);
           }}
         >
           <FormControl isInvalid={touched.email && !!errors.email}>

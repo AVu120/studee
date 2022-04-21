@@ -7,19 +7,19 @@
   width: 100%;
   padding: 1rem;
   position: fixed;
+  z-index: 1;
+
 }
 .header {
   @extend %header;
   top: 0;
+  height: 5rem;
 }
 .main {
-  // min-height: 100vh;
-  padding: 1rem;
-  // flex: 1;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: center;
-  // align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 6rem;
+  margin-bottom: 4rem;
 }
 
 .form {
@@ -30,4 +30,6 @@
 .footer {
   @extend %header;
   bottom: 0;
+  height: 3rem;
+  // margin-top: 10rem;
 }
