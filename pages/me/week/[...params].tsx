@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { login, logOut, signUp } from "services/auth";
+import { updateWeeklyPlan } from "services/weeklyPlans";
 import styles from "styles/pages/me.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
@@ -66,6 +67,17 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [error, setError] = useState("");
   const toast = useToast();
 
+  const onLogOut = () => logOut(setIsLoading, setError, router, toast);
+  const onSave = () =>
+    updateWeeklyPlan(
+      weeklyPlanState,
+      setIsLoading,
+      setError,
+      toast,
+      setHasUnsavedChanged,
+      savedWeeklyPlanRef
+    );
+
   return (
     <div className={styles.page}>
       <Head>
@@ -83,19 +95,12 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         <Button
           type="submit"
           variant="primary"
-          onClick={() => alert("initiate save workflow")}
-          disabled={
-            JSON.stringify(weeklyPlanState) ===
-            JSON.stringify(savedWeeklyPlanRef.current)
-          }
+          onClick={onSave}
+          disabled={!hasUnsavedChanges}
         >
           Save
         </Button>
-        <Button
-          type="submit"
-          variant="secondary"
-          onClick={() => logOut(setIsLoading, setError, router, toast)}
-        >
+        <Button type="submit" variant="secondary" onClick={onLogOut}>
           {isLoading ? "Loading..." : "Log Out "}
         </Button>
       </header>
