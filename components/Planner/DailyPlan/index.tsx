@@ -1,4 +1,4 @@
-import { Input } from "@chakra-ui/react";
+import { Heading, Input, Textarea, VStack } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
@@ -40,17 +40,32 @@ export const DailyPlan = ({
       }));
     };
 
+  const changeNotes =
+    (section: "postStudyAward" | "achievements" | "reflections") =>
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setWeeklyPlanState((currentWeeklyPlanState) => ({
+        ...currentWeeklyPlanState,
+        [dayOfWeek]: {
+          ...currentWeeklyPlanState[dayOfWeek],
+          [section]: e.target.value,
+        },
+      }));
+    };
   return (
     <div className={styles.container}>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>{`${capitalizeWord(dayOfWeek)} ${date}`}</th>
+            <th>
+              <Heading as="h2" size="sm">
+                {`${capitalizeWord(dayOfWeek)} ${date}`}
+              </Heading>
+            </th>
             <th className={styles.tableHeaderTimeCell}>Time</th>
           </tr>
         </thead>
         <tbody>
-          {Array.from({ length: 2 }).map((_: any, i: number) => (
+          {Array.from({ length: 7 }).map((_: any, i: number) => (
             // Use of index here is fine as there's no sorting and indexes will be
             // linked to input as there will always only be 7 task inputs.
             // eslint-disable-next-line react/no-array-index-key
@@ -76,7 +91,32 @@ export const DailyPlan = ({
           ))}
         </tbody>
       </table>
-      Placeholder for post-study treat, achievements and reflections.
+      <VStack pb="3">
+        <Heading as="h3" size="sm" mt="2">
+          Post-Study Award
+        </Heading>
+        <Textarea
+          resize="none"
+          value={data?.postStudyAward || ""}
+          onChange={changeNotes("postStudyAward")}
+        />
+        <Heading as="h3" size="sm">
+          Achievements
+        </Heading>
+        <Textarea
+          resize="none"
+          value={data?.achievements || ""}
+          onChange={changeNotes("achievements")}
+        />
+        <Heading as="h3" size="sm">
+          Reflections
+        </Heading>
+        <Textarea
+          resize="none"
+          value={data?.reflections || ""}
+          onChange={changeNotes("reflections")}
+        />
+      </VStack>
     </div>
   );
 };
