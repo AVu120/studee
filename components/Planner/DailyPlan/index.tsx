@@ -69,7 +69,6 @@ export const DailyPlan = ({
                   variant="unstyled"
                   placeholder={`Time ${i + 1}`}
                   value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time}
-                  disabled={!data?.tasks?.[`${i + 1}` as TTaskNumber]?.name}
                   onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
                 />
               </td>
