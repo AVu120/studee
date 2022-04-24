@@ -67,18 +67,11 @@ export const getWeeklyPlanOnClient = (
     .then((res) => {
       // Empty obj is returned if no weekly plan is found in db.
       console.log({ res2: res });
-      if (isEmptyObject(res)) {
-        console.log("RUN1");
-        savedWeeklyPlanRef.current = createEmptyWeeklyPlan(startDate);
-        setWeeklyPlanState(createEmptyWeeklyPlan(startDate));
-        setHasUnsavedChanged(false);
-        return router.push(`/me/week/${startDate}`, undefined, {
-          shallow: true,
-        });
-      }
-      console.log("RUN2");
-      savedWeeklyPlanRef.current = res;
-      setWeeklyPlanState(res);
+      const updatedWeeklyState = isEmptyObject(res)
+        ? createEmptyWeeklyPlan(startDate)
+        : res;
+      savedWeeklyPlanRef.current = updatedWeeklyState;
+      setWeeklyPlanState(updatedWeeklyState);
       setHasUnsavedChanged(false);
       return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
     })
