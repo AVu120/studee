@@ -1,5 +1,6 @@
 import { Input } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
 
@@ -44,7 +45,7 @@ export const DailyPlan = ({
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>{`${dayOfWeek} ${date}`}</th>
+            <th>{`${capitalizeWord(dayOfWeek)} ${date}`}</th>
             <th className={styles.tableHeaderTimeCell}>Time</th>
           </tr>
         </thead>
