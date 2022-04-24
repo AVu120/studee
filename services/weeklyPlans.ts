@@ -51,7 +51,8 @@ export const getWeeklyPlanOnClient = (
   setIsLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>,
-  router: NextRouter
+  router: NextRouter,
+  setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>
 ) => {
   let statusText: string;
   setIsLoading(true);
@@ -70,6 +71,7 @@ export const getWeeklyPlanOnClient = (
         console.log("RUN1");
         savedWeeklyPlanRef.current = createEmptyWeeklyPlan(startDate);
         setWeeklyPlanState(createEmptyWeeklyPlan(startDate));
+        setHasUnsavedChanged(false);
         return router.push(`/me/week/${startDate}`, undefined, {
           shallow: true,
         });
@@ -77,6 +79,7 @@ export const getWeeklyPlanOnClient = (
       console.log("RUN2");
       savedWeeklyPlanRef.current = res;
       setWeeklyPlanState(res);
+      setHasUnsavedChanged(false);
       return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
     })
     .catch((error) => {

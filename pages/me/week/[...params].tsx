@@ -38,6 +38,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
     serverStartDate = getCurrentStartDate();
   }
 
+  /** Last weeklyPlan record that user saved, used to determine if there's any local unsaved changes. */
   const savedWeeklyPlanRef = useRef(
     weeklyPlan || createEmptyWeeklyPlan(serverStartDate)
   );
@@ -85,7 +86,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       setIsLoadingNextWeekData,
       setError,
       savedWeeklyPlanRef,
-      router
+      router,
+      setHasUnsavedChanged
     );
   };
 
@@ -97,7 +99,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       setIsLoadingPriorWeekData,
       setError,
       savedWeeklyPlanRef,
-      router
+      router,
+      setHasUnsavedChanged
     );
   };
 
