@@ -149,13 +149,13 @@ export const signUp = (
 };
 
 export const logOut = (
-  setIsLoading: Dispatch<SetStateAction<boolean>>,
+  setIsLoggingOut: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
   router: NextRouter,
   toast: any
 ) => {
   let statusText: string;
-  setIsLoading(true);
+  setIsLoggingOut(true);
   fetch(`/api/session`, {
     method: "DELETE",
   })
@@ -175,5 +175,5 @@ export const logOut = (
     .catch((error) => {
       setError(error.message);
     })
-    .finally(() => setIsLoading(false));
+    .finally(() => setIsLoggingOut(false));
 };

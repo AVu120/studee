@@ -1,6 +1,11 @@
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
-import { IWeeklyPlan } from "utils/types/weeklyPlan";
+import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
+import { isEmptyObject } from "utils/helpers/lodash";
+import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
+/**
+ * Save changes made to weekly plan.
+ */
 export const updateWeeklyPlan = (
   weeklyPlanState: IWeeklyPlan,
   setIsSaving: Dispatch<SetStateAction<boolean>>,
@@ -37,4 +42,39 @@ export const updateWeeklyPlan = (
       setError(error.message);
     })
     .finally(() => setIsSaving(false));
+};
+
+export const getWeeklyPlanOnClient = (
+  startDate: string,
+  setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>,
+  setIsLoading: Dispatch<SetStateAction<boolean>>,
+  setError: Dispatch<SetStateAction<string>>,
+  savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
+) => {
+  let statusText: string;
+  setIsLoading(true);
+  fetch(`/api/weeklyPlans?startDate=${startDate}`)
+    .then((res) => {
+      console.log({ res });
+      if (!res.ok) {
+        throw new Error(statusText);
+      }
+      return res.json();
+    })
+    .then((res) => {
+      // Empty obj is returned if no weekly plan is found in db.
+      console.log({ res2: res });
+      if (isEmptyObject(res)) {
+        console.log("RUN1");
+        savedWeeklyPlanRef.current = createEmptyWeeklyPlan(startDate);
+        return setWeeklyPlanState(createEmptyWeeklyPlan(startDate));
+      }
+      console.log("RUN2");
+      savedWeeklyPlanRef.current = res;
+      return setWeeklyPlanState(res);
+    })
+    .catch((error) => {
+      setError(error.message);
+    })
+    .finally(() => setIsLoading(false));
 };

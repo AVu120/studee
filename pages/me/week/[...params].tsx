@@ -6,21 +6,25 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "services/auth";
-import { updateWeeklyPlan } from "services/weeklyPlans";
+import { getWeeklyPlanOnClient, updateWeeklyPlan } from "services/weeklyPlans";
 import styles from "styles/pages/me/week.module.scss";
 import colors from "styles/theme/colors";
-import { getEmptyWeeklyPlan } from "utils/constants/weeklyPlan";
-import { getCurrentStartDate, getDateInUrlPath } from "utils/helpers/dateTime";
-import { IWeeklyPlan } from "utils/types/weeklyPlan";
+import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
+import {
+  getCurrentStartDate,
+  getDateInUrlPath,
+  getNextStartDate,
+  getPreviousStartDate,
+} from "utils/helpers/dateTime";
+import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
 import { getUserData } from "../../api/user";
-import { getWeeklyPlan } from "../../api/weeklyPlans";
+import { getWeeklyPlanOnServer } from "../../api/weeklyPlans";
 
 interface Props {
-  email: string;
   weeklyPlan: IWeeklyPlan | null;
 }
-const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
+const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const router = useRouter();
 
   /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.  */
@@ -32,11 +36,12 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   }
 
   const savedWeeklyPlanRef = useRef(
-    weeklyPlan || getEmptyWeeklyPlan(emptyStartDate)
+    weeklyPlan || createEmptyWeeklyPlan(emptyStartDate)
   );
   const [weeklyPlanState, setWeeklyPlanState] = useState(
-    weeklyPlan || getEmptyWeeklyPlan(emptyStartDate)
+    weeklyPlan || createEmptyWeeklyPlan(emptyStartDate)
   );
+  console.log({ weeklyPlanState });
   const [hasUnsavedChanges, setHasUnsavedChanged] = useState(false);
 
   useEffect(() => {
@@ -51,25 +56,24 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
 
   const [startDateYear, startDateMonth, startDateDay] =
     weeklyPlanState.startDate.split("/").map((numString) => Number(numString));
-  const startDateString = `${startDateDay}/${startDateMonth}/${startDateYear}`;
-  // const endDateObject = new Date(
-  //   startDateYear,
-  //   startDateMonth - 1,
-  //   startDateDay
-  // );
+  const startDate = `${startDateDay}/${startDateMonth}/${startDateYear}`;
+
   // endDateObject.setDate(endDateObject.getDate() + 6);
   // const endDateString = `${endDateObject.getDate()}/${
   //   endDateObject.getMonth() + 1
   // }/${endDateObject.getFullYear()}`;
 
   // Track status of logout request.
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  // Track status of fetching new data e.g. next week or prior week's data.
+  const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
+  const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const toast = useToast();
 
-  const onLogOut = () => logOut(setIsLoading, setError, router, toast);
+  const onLogOut = () => logOut(setIsLoggingOut, setError, router, toast);
   const onSave = () =>
     updateWeeklyPlan(
       weeklyPlanState,
@@ -79,6 +83,40 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
       setHasUnsavedChanged,
       savedWeeklyPlanRef
     );
+
+  const onShowNextWeek = () => {
+    const nextStartDate = getNextStartDate({
+      currentYear: startDateYear,
+      currentMonth: startDateMonth - 1,
+      currentDay: startDateDay,
+    });
+    router.push(`/me/week/${nextStartDate}`, undefined, { shallow: true });
+    getWeeklyPlanOnClient(
+      nextStartDate,
+      setWeeklyPlanState,
+      setIsLoadingNextWeekData,
+      setError,
+      savedWeeklyPlanRef
+    );
+  };
+
+  const onShowPreviousWeek = () => {
+    const previousStartDate = getPreviousStartDate({
+      currentYear: startDateYear,
+      currentMonth: startDateMonth - 1,
+      currentDay: startDateDay,
+    });
+    router.push(`/me/week/${previousStartDate}`, undefined, {
+      shallow: true,
+    });
+    getWeeklyPlanOnClient(
+      previousStartDate,
+      setWeeklyPlanState,
+      setIsLoadingPriorWeekData,
+      setError,
+      savedWeeklyPlanRef
+    );
+  };
 
   return (
     <div className={styles.page}>
@@ -104,34 +142,38 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         </Button>
         <HStack>
           <IconButton
-            variant="unstyled"
+            variant="outline"
             aria-label="Show last week"
             isRound
             position="relative"
             right="-4"
             icon={<ChevronLeftIcon fontSize="2rem" />}
+            onClick={onShowPreviousWeek}
+            isLoading={isLoadingPriorWeekData}
           />
           <Text
             as="h1"
             textAlign="center"
             margin="0px"
-          >{`Week of ${startDateString}`}</Text>
+          >{`Week of ${startDate}`}</Text>
           <IconButton
-            variant="outlined"
+            variant="outline"
             aria-label="Show next week"
             isRound
             position="relative"
             left="-4"
             icon={<ChevronRightIcon fontSize="2rem" />}
+            onClick={onShowNextWeek}
+            isLoading={isLoadingNextWeekData}
           />
         </HStack>
         <Button
           type="submit"
           variant="secondary"
           onClick={onLogOut}
-          disabled={isLoading}
+          disabled={isLoggingOut}
         >
-          {isLoading ? "Loading..." : "Log Out "}
+          {isLoggingOut ? "Loading..." : "Log Out "}
         </Button>
       </header>
 
@@ -175,15 +217,15 @@ export const getServerSideProps: GetServerSideProps = async ({
     const userData = await getUserData(cookies.session);
 
     if (userData) {
-      const { email, user_id: userId } = userData;
+      const { user_id: userId } = userData;
 
       const { params } = query as { params: string[] };
       const startDate = `${params[0]}/${params[1]}/${params[2]}`;
 
-      const weeklyPlan = await getWeeklyPlan({ userId, startDate });
+      const weeklyPlan = await getWeeklyPlanOnServer({ userId, startDate });
 
       return {
-        props: { email, weeklyPlan },
+        props: { weeklyPlan },
       };
     }
   }

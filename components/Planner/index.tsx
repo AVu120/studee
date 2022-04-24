@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { daysOfWeek } from "utils/constants/dateTimes";
-import { IWeeklyPlan } from "utils/types/weeklyPlan";
+import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
 import { DailyPlan } from "./DailyPlan";
 

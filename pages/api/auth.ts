@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { isEmptyObject } from "utils/helpers/lodash";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -40,7 +41,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      if (Object.keys(req.body).length === 0) {
+      if (isEmptyObject(req.body)) {
         throw new Error("No request body");
       }
       const { email, password } = req.body;

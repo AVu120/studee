@@ -19,3 +19,37 @@ export const getCurrentStartDate = () => {
 
 export const getDateInUrlPath = (queryParams: string[]) =>
   `${queryParams[0]}/${queryParams[1]}/${queryParams[2]}`;
+
+export const getNextStartDate = ({
+  currentYear,
+  currentMonth,
+  currentDay,
+}: {
+  currentYear: number;
+  currentMonth: number;
+  currentDay: number;
+}) => {
+  const nextStartDateObject = new Date(currentYear, currentMonth, currentDay);
+
+  nextStartDateObject.setDate(nextStartDateObject.getDate() + 6);
+  return `${nextStartDateObject.getFullYear()}/${
+    nextStartDateObject.getMonth() + 1
+  }/${nextStartDateObject.getDate()}`;
+};
+
+export const getPreviousStartDate = ({
+  currentYear,
+  currentMonth,
+  currentDay,
+}: {
+  currentYear: number;
+  currentMonth: number;
+  currentDay: number;
+}) => {
+  const nextStartDateObject = new Date(currentYear, currentMonth, currentDay);
+
+  nextStartDateObject.setDate(nextStartDateObject.getDate() - 6);
+  return `${nextStartDateObject.getFullYear()}/${
+    nextStartDateObject.getMonth() + 1
+  }/${nextStartDateObject.getDate()}`;
+};

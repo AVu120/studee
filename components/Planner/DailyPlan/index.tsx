@@ -1,7 +1,7 @@
 import { Input } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { TDayOfWeek } from "utils/types/dateTime";
-import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlan";
+import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
 
 import styles from "./DailyPlan.module.scss";
 
@@ -24,7 +24,6 @@ export const DailyPlan = ({
   const changeTask =
     (taskNumber: TTaskNumber, taskProperty: "name" | "time") =>
     (e: ChangeEvent<HTMLInputElement>) => {
-      console.log({ taskNumber, "e.target.value": e.target.value });
       setWeeklyPlanState((currentWeeklyPlanState) => ({
         ...currentWeeklyPlanState,
         [dayOfWeek]: {
@@ -58,8 +57,8 @@ export const DailyPlan = ({
               <td className={styles.tableTaskCell}>
                 <Input
                   variant="unstyled"
-                  placeholder={`Task ${i + 1}`}
-                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name}
+                  // placeholder={`Task ${i + 1}`}
+                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name || ""}
                   onChange={changeTask(`${i + 1}` as TTaskNumber, "name")}
                 />
                 {/* <span className={styles.tableTaskCellContent}>Task Input</span> */}
@@ -67,8 +66,8 @@ export const DailyPlan = ({
               <td className={styles.tableTimeCell}>
                 <Input
                   variant="unstyled"
-                  placeholder={`Time ${i + 1}`}
-                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time}
+                  // placeholder={`Time ${i + 1}`}
+                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time || ""}
                   onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
                 />
               </td>

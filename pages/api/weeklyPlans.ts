@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "server-utils/database/mongodb";
-import { IWeeklyPlan } from "utils/types/weeklyPlan";
+import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
 import { getUserData } from "./user";
 /**
@@ -10,7 +10,7 @@ import { getUserData } from "./user";
  * @param userId ID of logged in user.
  * @returns Plan data for the week starting on startDate.
  */
-export const getWeeklyPlan = async ({
+export const getWeeklyPlanOnServer = async ({
   startDate,
   userId,
 }: {
@@ -54,10 +54,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .json({ message: `No ${!userId ? "userId" : "startDate"}` });
       }
 
-      const weeklyPlan = await getWeeklyPlan({ userId, startDate });
-      return weeklyPlan
-        ? res.status(200).json(weeklyPlan)
-        : res.status(404).json("Not found");
+      const weeklyPlan = await getWeeklyPlanOnServer({ userId, startDate });
+      return res.status(200).json(weeklyPlan || {});
     }
 
     if (req.method === "PUT") {
