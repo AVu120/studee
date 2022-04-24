@@ -1,3 +1,4 @@
+import { Grid } from "@chakra-ui/react";
 import React, { Dispatch, SetStateAction } from "react";
 import { daysOfWeek } from "utils/constants/dateTimes";
 import type { IWeeklyPlan } from "utils/types/weeklyPlans";
@@ -10,7 +11,15 @@ interface Props {
 }
 
 export const Planner = ({ weeklyPlan, setWeeklyPlanState }: Props) => (
-  <div>
+  <Grid
+    templateColumns={{
+      base: "auto",
+      md: "repeat(2, 1fr)",
+      lg: "repeat(3, 1fr)",
+      xl: "repeat(4, 1fr)",
+    }}
+    gridColumnGap="1rem"
+  >
     {/* This order of numbers is used to ensure Monday is the first day of the week. */}
     {[1, 2, 3, 4, 5, 6, 0].map((num, i) => {
       const { startDate } = weeklyPlan;
@@ -40,5 +49,5 @@ export const Planner = ({ weeklyPlan, setWeeklyPlanState }: Props) => (
         />
       );
     })}
-  </div>
+  </Grid>
 );
