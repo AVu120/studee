@@ -1,15 +1,14 @@
-import { Button, useToast } from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Button, HStack, IconButton, Text, useToast } from "@chakra-ui/react";
 import { Planner } from "components/Planner";
-import { DailyPlan } from "components/Planner/DailyPlan";
-import type { GetServerSideProps, NextPage, NextPageContext } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { login, logOut, signUp } from "services/auth";
+import { logOut } from "services/auth";
 import { updateWeeklyPlan } from "services/weeklyPlans";
 import styles from "styles/pages/me/week.module.scss";
 import colors from "styles/theme/colors";
-import { daysOfWeek } from "utils/constants/dateTimes";
 import { getEmptyWeeklyPlan } from "utils/constants/weeklyPlan";
 import { getCurrentStartDate, getDateInUrlPath } from "utils/helpers/dateTime";
 import { IWeeklyPlan } from "utils/types/weeklyPlan";
@@ -53,15 +52,15 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const [startDateYear, startDateMonth, startDateDay] =
     weeklyPlanState.startDate.split("/").map((numString) => Number(numString));
   const startDateString = `${startDateDay}/${startDateMonth}/${startDateYear}`;
-  const endDateObject = new Date(
-    startDateYear,
-    startDateMonth - 1,
-    startDateDay
-  );
-  endDateObject.setDate(endDateObject.getDate() + 6);
-  const endDateString = `${endDateObject.getDate()}/${
-    endDateObject.getMonth() + 1
-  }/${endDateObject.getFullYear()}`;
+  // const endDateObject = new Date(
+  //   startDateYear,
+  //   startDateMonth - 1,
+  //   startDateDay
+  // );
+  // endDateObject.setDate(endDateObject.getDate() + 6);
+  // const endDateString = `${endDateObject.getDate()}/${
+  //   endDateObject.getMonth() + 1
+  // }/${endDateObject.getFullYear()}`;
 
   // Track status of logout request.
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +93,7 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
-        <h1>{`Week of Mon ${startDateString} to Sun ${endDateString}`}</h1>
+        {" "}
         <Button
           type="submit"
           variant="primary"
@@ -103,6 +102,29 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         >
           {isSaving ? "Saving..." : "Save"}
         </Button>
+        <HStack>
+          <IconButton
+            variant="unstyled"
+            aria-label="Show last week"
+            isRound
+            position="relative"
+            right="-4"
+            icon={<ChevronLeftIcon fontSize="2rem" />}
+          />
+          <Text
+            as="h1"
+            textAlign="center"
+            margin="0px"
+          >{`Week of ${startDateString}`}</Text>
+          <IconButton
+            variant="outlined"
+            aria-label="Show next week"
+            isRound
+            position="relative"
+            left="-4"
+            icon={<ChevronRightIcon fontSize="2rem" />}
+          />
+        </HStack>
         <Button
           type="submit"
           variant="secondary"
