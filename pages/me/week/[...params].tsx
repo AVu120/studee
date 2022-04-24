@@ -11,6 +11,7 @@ import styles from "styles/pages/me/week.module.scss";
 import colors from "styles/theme/colors";
 import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
 import {
+  formatDateForClient,
   getCurrentStartDate,
   getDateInUrlPath,
   getNextStartDate,
@@ -27,22 +28,31 @@ interface Props {
 const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const router = useRouter();
 
-  /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.  */
-  let emptyStartDate: string;
+  /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.
+   * Server start date is in format "YYYY/MM/DD".
+   */
+  let serverStartDate: string;
   if (Array.isArray(router?.query?.params)) {
-    emptyStartDate = getDateInUrlPath(router?.query?.params);
+    serverStartDate = getDateInUrlPath(router?.query?.params);
   } else {
-    emptyStartDate = getCurrentStartDate();
+    serverStartDate = getCurrentStartDate();
   }
 
   const savedWeeklyPlanRef = useRef(
-    weeklyPlan || createEmptyWeeklyPlan(emptyStartDate)
+    weeklyPlan || createEmptyWeeklyPlan(serverStartDate)
   );
   const [weeklyPlanState, setWeeklyPlanState] = useState(
-    weeklyPlan || createEmptyWeeklyPlan(emptyStartDate)
+    weeklyPlan || createEmptyWeeklyPlan(serverStartDate)
   );
-  console.log({ weeklyPlanState });
   const [hasUnsavedChanges, setHasUnsavedChanged] = useState(false);
+
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
+  const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     if (
@@ -54,24 +64,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
     }
   }, [weeklyPlanState]);
 
-  const [startDateYear, startDateMonth, startDateDay] =
-    weeklyPlanState.startDate.split("/").map((numString) => Number(numString));
-  const startDate = `${startDateDay}/${startDateMonth}/${startDateYear}`;
-
-  // endDateObject.setDate(endDateObject.getDate() + 6);
-  // const endDateString = `${endDateObject.getDate()}/${
-  //   endDateObject.getMonth() + 1
-  // }/${endDateObject.getFullYear()}`;
-
-  // Track status of logout request.
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  // Track status of fetching new data e.g. next week or prior week's data.
-  const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
-  const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
-
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState("");
-  const toast = useToast();
+  const clientStartDate = formatDateForClient(serverStartDate);
 
   const onLogOut = () => logOut(setIsLoggingOut, setError, router, toast);
   const onSave = () =>
@@ -85,36 +78,26 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
     );
 
   const onShowNextWeek = () => {
-    const nextStartDate = getNextStartDate({
-      currentYear: startDateYear,
-      currentMonth: startDateMonth - 1,
-      currentDay: startDateDay,
-    });
-    router.push(`/me/week/${nextStartDate}`, undefined, { shallow: true });
+    const nextStartDate = getNextStartDate(serverStartDate);
     getWeeklyPlanOnClient(
       nextStartDate,
       setWeeklyPlanState,
       setIsLoadingNextWeekData,
       setError,
-      savedWeeklyPlanRef
+      savedWeeklyPlanRef,
+      router
     );
   };
 
   const onShowPreviousWeek = () => {
-    const previousStartDate = getPreviousStartDate({
-      currentYear: startDateYear,
-      currentMonth: startDateMonth - 1,
-      currentDay: startDateDay,
-    });
-    router.push(`/me/week/${previousStartDate}`, undefined, {
-      shallow: true,
-    });
+    const previousStartDate = getPreviousStartDate(serverStartDate);
     getWeeklyPlanOnClient(
       previousStartDate,
       setWeeklyPlanState,
       setIsLoadingPriorWeekData,
       setError,
-      savedWeeklyPlanRef
+      savedWeeklyPlanRef,
+      router
     );
   };
 
@@ -155,7 +138,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
             as="h1"
             textAlign="center"
             margin="0px"
-          >{`Week of ${startDate}`}</Text>
+          >{`Week of ${clientStartDate}`}</Text>
           <IconButton
             variant="outline"
             aria-label="Show next week"

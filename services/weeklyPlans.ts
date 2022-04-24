@@ -1,3 +1,4 @@
+import { type NextRouter } from "next/router";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
 import { isEmptyObject } from "utils/helpers/lodash";
@@ -49,7 +50,8 @@ export const getWeeklyPlanOnClient = (
   setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
-  savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
+  savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>,
+  router: NextRouter
 ) => {
   let statusText: string;
   setIsLoading(true);
@@ -67,14 +69,20 @@ export const getWeeklyPlanOnClient = (
       if (isEmptyObject(res)) {
         console.log("RUN1");
         savedWeeklyPlanRef.current = createEmptyWeeklyPlan(startDate);
-        return setWeeklyPlanState(createEmptyWeeklyPlan(startDate));
+        setWeeklyPlanState(createEmptyWeeklyPlan(startDate));
+        return router.push(`/me/week/${startDate}`, undefined, {
+          shallow: true,
+        });
       }
       console.log("RUN2");
       savedWeeklyPlanRef.current = res;
-      return setWeeklyPlanState(res);
+      setWeeklyPlanState(res);
+      return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
     })
     .catch((error) => {
       setError(error.message);
     })
-    .finally(() => setIsLoading(false));
+    .finally(() => {
+      setIsLoading(false);
+    });
 };
