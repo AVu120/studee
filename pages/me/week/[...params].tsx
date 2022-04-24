@@ -131,9 +131,23 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
             variant="outline"
             aria-label="Show last week"
             isRound
+            borderColor="transparent"
             position="relative"
-            right="-4"
-            icon={<ChevronLeftIcon fontSize="2rem" />}
+            right={{
+              base: "-4",
+              md: "-3",
+              lg: "-2",
+              xl: "-1",
+            }}
+            icon={
+              <ChevronLeftIcon
+                fontSize={{
+                  base: "2rem",
+                  md: "2.5rem",
+                  lg: "3rem",
+                }}
+              />
+            }
             onClick={onShowPreviousWeek}
             isLoading={isLoadingPriorWeekData}
           />
@@ -145,10 +159,24 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
           <IconButton
             variant="outline"
             aria-label="Show next week"
+            borderColor="transparent"
             isRound
             position="relative"
-            left="-4"
-            icon={<ChevronRightIcon fontSize="2rem" />}
+            left={{
+              base: "-4",
+              md: "-3",
+              lg: "-2",
+              xl: "-1",
+            }}
+            icon={
+              <ChevronRightIcon
+                fontSize={{
+                  base: "2rem",
+                  md: "2.5rem",
+                  lg: "3rem",
+                }}
+              />
+            }
             onClick={onShowNextWeek}
             isLoading={isLoadingNextWeekData}
           />
