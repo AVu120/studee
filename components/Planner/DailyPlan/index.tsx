@@ -1,5 +1,5 @@
 import { Heading, Input, Textarea, VStack } from "@chakra-ui/react";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
@@ -16,12 +16,13 @@ interface Props {
 const taskNumbers = ["1", "2", "3", "4", "5", "6", "7"] as const;
 type TTaskNumber = typeof taskNumbers[number];
 
-export const DailyPlan = ({
+const UnmemoizedDailyPlan = ({
   dayOfWeek,
   date,
   data,
   setWeeklyPlanState,
 }: Props) => {
+  console.log(`Card of ${dayOfWeek} renders!`);
   const changeTask =
     (taskNumber: TTaskNumber, taskProperty: "name" | "time") =>
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -120,3 +121,11 @@ export const DailyPlan = ({
     </div>
   );
 };
+
+export const DailyPlan = memo(
+  UnmemoizedDailyPlan,
+  (prevProps, nextProps) =>
+    prevProps.dayOfWeek === nextProps.dayOfWeek &&
+    prevProps.date === nextProps.date &&
+    prevProps.data === nextProps.data
+);
