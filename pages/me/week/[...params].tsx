@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { login, logOut, signUp } from "services/auth";
 import { updateWeeklyPlan } from "services/weeklyPlans";
-import styles from "styles/pages/me.module.scss";
+import styles from "styles/pages/me/week.module.scss";
 import colors from "styles/theme/colors";
 import { daysOfWeek } from "utils/constants/dateTimes";
 import { getEmptyWeeklyPlan } from "utils/constants/weeklyPlan";
@@ -63,7 +63,10 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
     endDateObject.getMonth() + 1
   }/${endDateObject.getFullYear()}`;
 
+  // Track status of logout request.
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const toast = useToast();
 
@@ -71,7 +74,7 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
   const onSave = () =>
     updateWeeklyPlan(
       weeklyPlanState,
-      setIsLoading,
+      setIsSaving,
       setError,
       toast,
       setHasUnsavedChanged,
@@ -96,11 +99,16 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
           type="submit"
           variant="primary"
           onClick={onSave}
-          disabled={!hasUnsavedChanges}
+          disabled={!hasUnsavedChanges || isSaving}
         >
-          Save
+          {isSaving ? "Saving..." : "Save"}
         </Button>
-        <Button type="submit" variant="secondary" onClick={onLogOut}>
+        <Button
+          type="submit"
+          variant="secondary"
+          onClick={onLogOut}
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Log Out "}
         </Button>
       </header>
@@ -117,7 +125,17 @@ const Me: NextPage<Props> = ({ email, weeklyPlan }) => {
         // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
-        Footer
+        <span>Studee App</span>
+        <span>
+          Created by{" "}
+          <a
+            href="https://www.linkedin.com/in/anthony-hien-vu/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Anthony Hien Vu
+          </a>
+        </span>
       </footer>
     </div>
   );

@@ -3,14 +3,14 @@ import { IWeeklyPlan } from "utils/types/weeklyPlan";
 
 export const updateWeeklyPlan = (
   weeklyPlanState: IWeeklyPlan,
-  setIsLoading: Dispatch<SetStateAction<boolean>>,
+  setIsSaving: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string>>,
   toast: any,
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
 ) => {
   let statusText: string;
-  setIsLoading(true);
+  setIsSaving(true);
   fetch(`/api/weeklyPlans`, {
     method: "PUT",
     body: JSON.stringify(weeklyPlanState),
@@ -36,5 +36,5 @@ export const updateWeeklyPlan = (
     .catch((error) => {
       setError(error.message);
     })
-    .finally(() => setIsLoading(false));
+    .finally(() => setIsSaving(false));
 };
