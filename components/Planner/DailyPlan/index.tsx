@@ -1,4 +1,4 @@
-import { Heading, Input, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Heading, Input, Textarea, VStack } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
@@ -22,7 +22,6 @@ const UnmemoizedDailyPlan = ({
   data,
   setWeeklyPlanState,
 }: Props) => {
-  console.log(`Card of ${dayOfWeek} renders!`);
   const changeTask =
     (taskNumber: TTaskNumber, taskProperty: "name" | "time") =>
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +52,7 @@ const UnmemoizedDailyPlan = ({
       }));
     };
   return (
-    <div className={styles.container}>
+    <Box className={styles.container} boxShadow="lg">
       <table className={styles.table}>
         <thead>
           <tr>
@@ -118,7 +117,7 @@ const UnmemoizedDailyPlan = ({
           onChange={changeNotes("reflections")}
         />
       </VStack>
-    </div>
+    </Box>
   );
 };
 
