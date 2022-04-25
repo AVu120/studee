@@ -1,5 +1,8 @@
+import { HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Center,
   Heading,
+  IconButton,
   Input,
   Table,
   TableContainer,
@@ -11,6 +14,7 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
+import { MenuButtonComponent } from "components/common/MenuButton";
 import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
@@ -35,7 +39,7 @@ const UnmemoizedDailyPlan = ({
   setWeeklyPlanState,
 }: Props) => {
   const changeTask =
-    (taskNumber: TTaskNumber, taskProperty: "name" | "time") =>
+    (taskNumber: TTaskNumber, taskProperty: "name" | "time" | "isComplete") =>
     (e: ChangeEvent<HTMLInputElement>) => {
       setWeeklyPlanState((currentWeeklyPlanState) => ({
         ...currentWeeklyPlanState,
@@ -51,6 +55,43 @@ const UnmemoizedDailyPlan = ({
         },
       }));
     };
+
+  const toggleTaskCompleteness = (taskNumber: TTaskNumber) => {
+    setWeeklyPlanState((currentWeeklyPlanState) => ({
+      ...currentWeeklyPlanState,
+      [dayOfWeek]: {
+        ...currentWeeklyPlanState[dayOfWeek],
+        tasks: {
+          ...currentWeeklyPlanState[dayOfWeek]?.tasks,
+          [taskNumber]: {
+            ...currentWeeklyPlanState[dayOfWeek]?.tasks?.[taskNumber],
+            isComplete: !(
+              currentWeeklyPlanState[dayOfWeek]?.tasks?.[taskNumber]
+                ?.isComplete ?? false
+            ),
+          },
+        },
+      },
+    }));
+  };
+
+  const clearTask = (taskNumber: TTaskNumber) => {
+    setWeeklyPlanState((currentWeeklyPlanState) => ({
+      ...currentWeeklyPlanState,
+      [dayOfWeek]: {
+        ...currentWeeklyPlanState[dayOfWeek],
+        tasks: {
+          ...currentWeeklyPlanState[dayOfWeek]?.tasks,
+          [taskNumber]: {
+            ...currentWeeklyPlanState[dayOfWeek]?.tasks?.[taskNumber],
+            isComplete: false,
+            name: "",
+            time: "",
+          },
+        },
+      },
+    }));
+  };
 
   const changeNotes =
     (section: "postStudyAward" | "achievements" | "reflections") =>
@@ -73,31 +114,78 @@ const UnmemoizedDailyPlan = ({
                 {`${capitalizeWord(dayOfWeek)} ${date}`}
               </Th>
               <Th fontSize="sm">Time</Th>
+              <Th fontSize="sm">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {Array.from({ length: 7 }).map((_: any, i: number) => (
-              <Tr key={`${dayOfWeek}-task-${i + 1}`}>
-                <Td width="70%">
-                  <Input
-                    variant="unstyled"
-                    value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name || ""}
-                    onChange={changeTask(`${i + 1}` as TTaskNumber, "name")}
-                    isTruncated
-                    fontSize="sm"
-                  />
-                </Td>
-                <Td>
-                  <Input
-                    variant="unstyled"
-                    value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time || ""}
-                    onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
-                    isTruncated
-                    fontSize="sm"
-                  />
-                </Td>
-              </Tr>
-            ))}
+            {Array.from({ length: 7 }).map((_: any, i: number) => {
+              const taskNumberString = `${i + 1}`;
+              const isComplete =
+                data?.tasks?.[taskNumberString as TTaskNumber]?.isComplete;
+              return (
+                <Tr key={`${dayOfWeek}-task-${i + 1}`}>
+                  <Td width="70%">
+                    <Input
+                      variant="unstyled"
+                      value={
+                        data?.tasks?.[taskNumberString as TTaskNumber]?.name ||
+                        ""
+                      }
+                      onChange={changeTask(
+                        taskNumberString as TTaskNumber,
+                        "name"
+                      )}
+                      isTruncated
+                      fontSize="sm"
+                      textDecorationLine={isComplete ? "line-through" : "none"}
+                    />
+                  </Td>
+                  <Td>
+                    <Input
+                      variant="unstyled"
+                      value={
+                        data?.tasks?.[taskNumberString as TTaskNumber]?.time ||
+                        ""
+                      }
+                      onChange={changeTask(
+                        taskNumberString as TTaskNumber,
+                        "time"
+                      )}
+                      isTruncated
+                      fontSize="sm"
+                      textDecorationLine={isComplete ? "line-through" : "none"}
+                    />
+                  </Td>
+                  <Td>
+                    <Center>
+                      <MenuButtonComponent
+                        ariaLabel="Task actions menu button"
+                        icon={HamburgerIcon}
+                        options={[
+                          {
+                            title: "Clear task",
+                            onClick: () =>
+                              clearTask(taskNumberString as TTaskNumber),
+                          },
+                          {
+                            title: `${
+                              isComplete ? "Uncomplete" : "Complete"
+                            } task`,
+                            onClick: () =>
+                              toggleTaskCompleteness(
+                                taskNumberString as TTaskNumber
+                              ),
+                            isHidden:
+                              !data?.tasks?.[taskNumberString as TTaskNumber]
+                                ?.name,
+                          },
+                        ]}
+                      />
+                    </Center>
+                  </Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </TableContainer>
