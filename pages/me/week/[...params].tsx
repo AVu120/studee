@@ -7,6 +7,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { Acknowledgement } from "components/common/modals/Acknowledgement";
 import { WarningPrompt } from "components/common/modals/WarningPrompt";
 import { Planner } from "components/pages/me/week/Planner";
 import type { GetServerSideProps, NextPage } from "next";
@@ -66,6 +67,10 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
 
   const [isSaving, setIsSaving] = useState(false);
   const toast = useToast();
+  const [notification, setNotification] = useState<{
+    title: string;
+    message: string;
+  }>({ title: "", message: "" });
 
   useEffect(() => {
     if (
@@ -86,7 +91,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       setIsSaving,
       toast,
       setHasUnsavedChanged,
-      savedWeeklyPlanRef
+      savedWeeklyPlanRef,
+      setNotification
     );
 
   const onShowNextWeek = () => {
@@ -97,7 +103,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       setIsLoadingNextWeekData,
       savedWeeklyPlanRef,
       router,
-      setHasUnsavedChanged
+      setHasUnsavedChanged,
+      setNotification
     );
   };
 
@@ -109,7 +116,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       setIsLoadingPriorWeekData,
       savedWeeklyPlanRef,
       router,
-      setHasUnsavedChanged
+      setHasUnsavedChanged,
+      setNotification
     );
   };
 
@@ -242,6 +250,14 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
           }}
           title="Discard unsaved changes?"
           prompt="Your changes will be lost. Do you want to proceed anyway?"
+        />
+        <Acknowledgement
+          isOpen={!!notification.message}
+          onClose={() => {
+            setNotification({ title: "", message: "" });
+          }}
+          message={notification.message}
+          title={notification.title}
         />
       </main>
 

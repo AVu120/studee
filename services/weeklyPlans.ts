@@ -12,7 +12,13 @@ export const updateWeeklyPlan = (
   setIsSaving: Dispatch<SetStateAction<boolean>>,
   toast: any,
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>,
-  savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
+  savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>,
+  setNotification: Dispatch<
+    SetStateAction<{
+      title: string;
+      message: string;
+    }>
+  >
 ) => {
   setIsSaving(true);
   fetch(`/api/weeklyPlans`, {
@@ -40,7 +46,7 @@ export const updateWeeklyPlan = (
       savedWeeklyPlanRef.current = weeklyPlanState;
     })
     .catch((error) => {
-      alert(error.message);
+      setNotification({ title: "Error", message: error.message });
     })
     .finally(() => setIsSaving(false));
 };
@@ -51,7 +57,13 @@ export const getWeeklyPlanOnClient = (
   setIsLoading: Dispatch<SetStateAction<boolean>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>,
   router: NextRouter,
-  setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>
+  setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>,
+  setNotification: Dispatch<
+    SetStateAction<{
+      title: string;
+      message: string;
+    }>
+  >
 ) => {
   setIsLoading(true);
   fetch(`/api/weeklyPlans?startDate=${startDate}`)
@@ -77,7 +89,7 @@ export const getWeeklyPlanOnClient = (
       return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
     })
     .catch((error) => {
-      alert(error.message);
+      setNotification({ title: "Error", message: error.message });
     })
     .finally(() => {
       setIsLoading(false);

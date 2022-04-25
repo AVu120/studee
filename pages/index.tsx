@@ -222,7 +222,6 @@ const Landing: NextPage = () => {
             </Button>
           </Collapse>
         </form>
-        {/* Account successfully created modal */}
         <Acknowledgement
           isOpen={!!notification.message}
           onClose={() => {
