@@ -73,7 +73,7 @@ export const login = (
           title: `Redirecting...`,
           position: "top",
           isClosable: true,
-          duration: 3000,
+          duration: 5000,
           status: "info",
         });
         router.push(`/me/week/${getCurrentStartDate()}`);
