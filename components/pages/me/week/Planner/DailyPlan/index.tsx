@@ -141,31 +141,33 @@ const UnmemoizedDailyPlan = ({
                     />
                   </Td>
                   <Td isNumeric>
-                    <MenuButtonComponent
-                      ariaLabel="Task actions menu button"
-                      icon={HamburgerIcon}
-                      options={[
-                        {
-                          title: "Clear task",
-                          onClick: () =>
-                            clearTask(taskNumberString as TTaskNumber),
-                        },
-                        {
-                          title: `${
-                            isComplete ? "Uncomplete" : "Complete"
-                          } task`,
-                          onClick: () =>
-                            toggleTaskCompleteness(
-                              taskNumberString as TTaskNumber
-                            ),
-                          isHidden:
-                            !data?.tasks?.[taskNumberString as TTaskNumber]
-                              ?.name,
-                        },
-                      ]}
-                      boxSize="1rem"
-                      style={{ position: "relative", right: "-10px" }}
-                    />
+                    {data?.tasks?.[taskNumberString as TTaskNumber]?.name && (
+                      <MenuButtonComponent
+                        ariaLabel="Task actions menu button"
+                        icon={HamburgerIcon}
+                        options={[
+                          {
+                            title: "Clear task",
+                            onClick: () =>
+                              clearTask(taskNumberString as TTaskNumber),
+                          },
+                          {
+                            title: `${
+                              isComplete ? "Uncomplete" : "Complete"
+                            } task`,
+                            onClick: () =>
+                              toggleTaskCompleteness(
+                                taskNumberString as TTaskNumber
+                              ),
+                            isHidden:
+                              !data?.tasks?.[taskNumberString as TTaskNumber]
+                                ?.name,
+                          },
+                        ]}
+                        boxSize="1rem"
+                        style={{ position: "relative", right: "-10px" }}
+                      />
+                    )}
                   </Td>
                 </Tr>
               );
