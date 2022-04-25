@@ -5,17 +5,21 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 interface Props {
   icon: ReactNode;
   options: { title: string; onClick: () => void; isHidden?: boolean }[];
   ariaLabel: string;
+  boxSize: string;
+  style: CSSProperties;
 }
 export const MenuButtonComponent = ({
   icon: Icon,
   options,
   ariaLabel,
+  boxSize,
+  style,
 }: Props) => (
   <Menu isLazy autoSelect>
     <MenuButton
@@ -26,7 +30,8 @@ export const MenuButtonComponent = ({
       variant="outline"
       bg="transparent"
       border="none"
-      boxSize="1rem"
+      boxSize={boxSize}
+      style={style}
     />
     <MenuList>
       {options.map(({ title, onClick, isHidden }) => (

@@ -1,13 +1,12 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import {
-  Center,
   Heading,
-  IconButton,
   Input,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Textarea,
   Th,
   Thead,
@@ -39,8 +38,7 @@ const UnmemoizedDailyPlan = ({
   setWeeklyPlanState,
 }: Props) => {
   const changeTask =
-    (taskNumber: TTaskNumber, taskProperty: "name" | "time" | "isComplete") =>
-    (e: ChangeEvent<HTMLInputElement>) => {
+    (taskNumber: TTaskNumber) => (e: ChangeEvent<HTMLInputElement>) => {
       setWeeklyPlanState((currentWeeklyPlanState) => ({
         ...currentWeeklyPlanState,
         [dayOfWeek]: {
@@ -49,7 +47,8 @@ const UnmemoizedDailyPlan = ({
             ...currentWeeklyPlanState[dayOfWeek]?.tasks,
             [taskNumber]: {
               ...currentWeeklyPlanState[dayOfWeek]?.tasks?.[taskNumber],
-              [taskProperty]: e.target.value,
+              name: e.target.value,
+              ...(e.target.value === "" && { isComplete: false }),
             },
           },
         },
@@ -113,8 +112,11 @@ const UnmemoizedDailyPlan = ({
               <Th textDecorationLine="underline" fontSize="sm">
                 {`${capitalizeWord(dayOfWeek)} ${date}`}
               </Th>
-              <Th fontSize="sm">Time</Th>
-              <Th fontSize="sm">Action</Th>
+              <Th fontSize="sm">
+                <Text position="relative" right="-2">
+                  Action
+                </Text>
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -124,64 +126,46 @@ const UnmemoizedDailyPlan = ({
                 data?.tasks?.[taskNumberString as TTaskNumber]?.isComplete;
               return (
                 <Tr key={`${dayOfWeek}-task-${i + 1}`}>
-                  <Td width="70%">
+                  <Td width="100%">
                     <Input
                       variant="unstyled"
                       value={
                         data?.tasks?.[taskNumberString as TTaskNumber]?.name ||
                         ""
                       }
-                      onChange={changeTask(
-                        taskNumberString as TTaskNumber,
-                        "name"
-                      )}
+                      onChange={changeTask(taskNumberString as TTaskNumber)}
                       isTruncated
                       fontSize="sm"
                       textDecorationLine={isComplete ? "line-through" : "none"}
+                      width="calc(100% + 40px)"
                     />
                   </Td>
-                  <Td>
-                    <Input
-                      variant="unstyled"
-                      value={
-                        data?.tasks?.[taskNumberString as TTaskNumber]?.time ||
-                        ""
-                      }
-                      onChange={changeTask(
-                        taskNumberString as TTaskNumber,
-                        "time"
-                      )}
-                      isTruncated
-                      fontSize="sm"
-                      textDecorationLine={isComplete ? "line-through" : "none"}
+                  <Td isNumeric>
+                    <MenuButtonComponent
+                      ariaLabel="Task actions menu button"
+                      icon={HamburgerIcon}
+                      options={[
+                        {
+                          title: "Clear task",
+                          onClick: () =>
+                            clearTask(taskNumberString as TTaskNumber),
+                        },
+                        {
+                          title: `${
+                            isComplete ? "Uncomplete" : "Complete"
+                          } task`,
+                          onClick: () =>
+                            toggleTaskCompleteness(
+                              taskNumberString as TTaskNumber
+                            ),
+                          isHidden:
+                            !data?.tasks?.[taskNumberString as TTaskNumber]
+                              ?.name,
+                        },
+                      ]}
+                      boxSize="1rem"
+                      style={{ position: "relative", right: "-10px" }}
                     />
-                  </Td>
-                  <Td>
-                    <Center>
-                      <MenuButtonComponent
-                        ariaLabel="Task actions menu button"
-                        icon={HamburgerIcon}
-                        options={[
-                          {
-                            title: "Clear task",
-                            onClick: () =>
-                              clearTask(taskNumberString as TTaskNumber),
-                          },
-                          {
-                            title: `${
-                              isComplete ? "Uncomplete" : "Complete"
-                            } task`,
-                            onClick: () =>
-                              toggleTaskCompleteness(
-                                taskNumberString as TTaskNumber
-                              ),
-                            isHidden:
-                              !data?.tasks?.[taskNumberString as TTaskNumber]
-                                ?.name,
-                          },
-                        ]}
-                      />
-                    </Center>
                   </Td>
                 </Tr>
               );
