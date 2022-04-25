@@ -14,6 +14,11 @@ export default {
       bgClip: "text",
       fontWeight: "extrabold",
     },
+    h2: {
+      bgGradient: "linear(to-l, tertiary, primary)",
+      bgClip: "text",
+      fontWeight: "extrabold",
+    },
   },
   // defaults values for `size` and `variant`
   defaultProps: {},

@@ -99,7 +99,9 @@ const Landing: NextPage = () => {
         <Heading variant="h1" size="h1" as="h1">
           Welcome to Studee
         </Heading>
-
+        <Heading variant="h2" size="h2" as="h2" mb="1rem">
+          All your study planning in one app.
+        </Heading>
         <form
           className={styles.form}
           onSubmit={(e) => {
