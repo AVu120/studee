@@ -2,8 +2,6 @@ import { serialize } from "cookie";
 import crypto from "crypto";
 import { initializeApp } from "firebase/app";
 import {
-  type UserCredential,
-  connectAuthEmulator,
   getAuth,
   sendEmailVerification,
   signInWithEmailAndPassword,

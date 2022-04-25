@@ -8,7 +8,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import { LegacyRef, MutableRefObject, RefObject, useRef } from "react";
+import { RefObject, useRef } from "react";
 
 interface Props {
   onClose: () => void;

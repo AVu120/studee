@@ -20,7 +20,7 @@
     "prettier/prettier": "error",
     // REACT RULES
     "react/react-in-jsx-scope": "off",
-    "react/jsx-props-no-spreading": "warn",
+    "react/jsx-props-no-spreading": "off",
     "react/forbid-prop-types": "off",
     "react/prop-types": "off",
     // defaultProps rule to be deprecated on function components
@@ -40,6 +40,8 @@
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     // GENERAL:
     "no-param-reassign": "off"
   }
