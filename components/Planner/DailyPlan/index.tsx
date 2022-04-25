@@ -1,5 +1,4 @@
 import {
-  Box,
   Heading,
   Input,
   Table,
@@ -16,6 +15,8 @@ import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
+
+import { Card } from "./Card";
 
 interface Props {
   dayOfWeek: TDayOfWeek;
@@ -63,14 +64,7 @@ const UnmemoizedDailyPlan = ({
       }));
     };
   return (
-    <Box
-      boxShadow="md"
-      padding="1rem"
-      borderRadius="1rem"
-      marginBottom="1rem"
-      border="1px"
-      borderColor="gray.300"
-    >
+    <Card>
       <TableContainer>
         <Table variant="striped" size="sm">
           <Thead>
@@ -133,7 +127,7 @@ const UnmemoizedDailyPlan = ({
           onChange={changeNotes("reflections")}
         />
       </VStack>
-    </Box>
+    </Card>
   );
 };
 
