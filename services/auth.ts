@@ -38,6 +38,7 @@ export const login = (
         notificationTitle = res.statusText;
         return res.json();
       }
+      console.log({ res });
       if (!res.ok) {
         throw new Error(res.statusText);
       }
@@ -72,13 +73,14 @@ export const login = (
           title: `Redirecting...`,
           position: "top",
           isClosable: true,
-          duration: 2000,
+          duration: 3000,
           status: "info",
         });
         router.push(`/me/week/${getCurrentStartDate()}`);
       });
     })
     .catch((error) => {
+      console.log({ error });
       const errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {
         return setError((currentErrors) => ({

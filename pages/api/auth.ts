@@ -80,6 +80,7 @@ export default async function handler(
       res.statusMessage = "Authentication successful";
       return res.status(200).json({ idToken, csrfToken });
     } catch (error: any) {
+      console.log({ error });
       res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
