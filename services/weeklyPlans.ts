@@ -14,7 +14,6 @@ export const updateWeeklyPlan = (
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
 ) => {
-  let statusText: string;
   setIsSaving(true);
   fetch(`/api/weeklyPlans`, {
     method: "PUT",
@@ -25,7 +24,9 @@ export const updateWeeklyPlan = (
   })
     .then((res) => {
       if (!res.ok) {
-        throw new Error(statusText);
+        return res.json().then((error) => {
+          throw error;
+        });
       }
       toast({
         title: `Successfully saved`,
@@ -52,12 +53,16 @@ export const getWeeklyPlanOnClient = (
   router: NextRouter,
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>
 ) => {
-  let statusText: string;
   setIsLoading(true);
   fetch(`/api/weeklyPlans?startDate=${startDate}`)
     .then((res) => {
       if (!res.ok) {
-        throw new Error(statusText);
+        return res
+          .clone()
+          .json()
+          .then((error) => {
+            throw error;
+          });
       }
       return res.json();
     })

@@ -51,7 +51,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.setHeader("Set-Cookie", serialize("session", sessionCookie, options));
       return res.status(200).json({ message: "Successfully logged in." });
     } catch (error: any) {
-      res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
   }

@@ -1,10 +1,8 @@
-// const ROOT_URL = "http://localhost:3000";
-
 import type { NextRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 
-export const login = (
+export const logIn = (
   email: string,
   password: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
@@ -19,7 +17,6 @@ export const login = (
   toast: any
 ) => {
   let responseStatus: number;
-  let notificationTitle: string;
   setLoading(true);
   fetch(`/api/auth`, {
     method: "POST",
@@ -35,20 +32,22 @@ export const login = (
       // If user hasn't verified email, remind them to verify their email before logging in.
       if (res.status === 401) {
         responseStatus = res.status;
-        notificationTitle = res.statusText;
         return res.json();
       }
-      console.log({ res });
       if (!res.ok) {
-        throw new Error(res.statusText);
+        return res
+          .clone()
+          .json()
+          .then((error) => {
+            throw error;
+          });
       }
-
       return res.json();
     })
     .then((res) => {
       if (responseStatus === 401) {
         return setNotification({
-          title: notificationTitle,
+          title: "Please Verify Email",
           message: res.message,
         });
       }
@@ -80,7 +79,6 @@ export const login = (
       });
     })
     .catch((error) => {
-      console.log({ error });
       const errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {
         return setError((currentErrors) => ({
@@ -97,16 +95,16 @@ export const login = (
       }
 
       if (errorMessage.includes("too-many-requests")) {
-        return setError((currentErrors) => ({
-          ...currentErrors,
-          email: "You are sending too many requests. Please try again later.",
-        }));
+        return setNotification({
+          title: "Error",
+          message: "You are sending too many requests. Please try again later.",
+        });
       }
 
-      return setError((currentErrors) => ({
-        ...currentErrors,
-        email: errorMessage,
-      }));
+      return setNotification({
+        title: "Error",
+        message: errorMessage,
+      });
     })
     .finally(() => setLoading(false));
 };
@@ -115,12 +113,6 @@ export const signUp = (
   email: string,
   password: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<
-    SetStateAction<{
-      email: string;
-      password: { arguments?: number; message: string; validation?: string }[];
-    }>
-  >,
   setNotification: Dispatch<
     SetStateAction<{
       title: string;
@@ -128,7 +120,6 @@ export const signUp = (
     }>
   >
 ) => {
-  let statusText: string;
   setLoading(true);
   fetch(`/api/user`, {
     method: "POST",
@@ -141,21 +132,27 @@ export const signUp = (
     },
   })
     .then((res) => {
-      statusText = res.statusText;
       if (!res.ok) {
-        throw new Error(statusText);
+        return res
+          .clone()
+          .json()
+          .then((error) => {
+            throw error;
+          });
       }
       return res.json();
     })
     .then((res) => {
       setNotification({
-        title: statusText,
+        title: "Account Created",
         message: res.message,
       });
     })
     .catch((error) => {
-      const errorMessage = error.message;
-      setError((currentErrors) => ({ ...currentErrors, email: errorMessage }));
+      setNotification({
+        title: "Error",
+        message: error.message,
+      });
     })
     .finally(() => setLoading(false));
 };
@@ -165,14 +162,15 @@ export const logOut = (
   router: NextRouter,
   toast: any
 ) => {
-  let statusText: string;
   setIsLoggingOut(true);
   fetch(`/api/session`, {
     method: "DELETE",
   })
     .then((res) => {
       if (!res.ok) {
-        throw new Error(statusText);
+        return res.json().then((error) => {
+          throw error;
+        });
       }
       toast({
         title: `You have successfully logged out.`,
@@ -192,12 +190,6 @@ export const logOut = (
 export const resetPassword = (
   email: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<
-    SetStateAction<{
-      email: string;
-      password: { arguments?: number; message: string; validation?: string }[];
-    }>
-  >,
   setNotification: Dispatch<
     SetStateAction<{
       title: string;
@@ -205,7 +197,6 @@ export const resetPassword = (
     }>
   >
 ) => {
-  let statusText: string;
   setLoading(true);
   fetch(`/api/resetPassword`, {
     method: "POST",
@@ -217,21 +208,34 @@ export const resetPassword = (
     },
   })
     .then((res) => {
-      statusText = res.statusText;
       if (!res.ok) {
-        throw new Error(statusText);
+        return res
+          .clone()
+          .json()
+          .then((error) => {
+            throw error;
+          });
       }
       return res.json();
     })
     .then((res) => {
       setNotification({
-        title: statusText,
+        title: "Reset password email sent",
         message: res.message,
       });
     })
     .catch((error) => {
       const errorMessage = error.message;
-      setError((currentErrors) => ({ ...currentErrors, email: errorMessage }));
+      if (errorMessage.includes("user-not-found")) {
+        return setNotification({
+          title: "Error",
+          message: "This email account does not exist.",
+        });
+      }
+      return setNotification({
+        title: "Error",
+        message: errorMessage,
+      });
     })
     .finally(() => setLoading(false));
 };

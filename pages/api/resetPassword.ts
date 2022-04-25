@@ -34,12 +34,10 @@ export default async function handler(
       }
 
       await sendPasswordResetEmail(auth, email);
-      res.statusMessage = "Reset password email sent";
       return res.status(200).json({
         message: "A reset pasword link has been sent to your email.",
       });
     } catch (error: any) {
-      res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
   }

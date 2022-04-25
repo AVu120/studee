@@ -58,7 +58,6 @@ export default async function handler(
       );
       if (!userCredential.user.emailVerified) {
         await sendEmailVerification(userCredential.user);
-        res.statusMessage = "Please Verify Email";
         return res.status(401).json({
           message:
             "You must verify your email from the activation link sent to your email before logging in.",
@@ -77,11 +76,8 @@ export default async function handler(
           path: "/",
         })
       );
-      res.statusMessage = "Authentication successful";
       return res.status(200).json({ idToken, csrfToken });
     } catch (error: any) {
-      console.log({ error });
-      res.statusMessage = error.message;
       return res.status(500).json({ message: error.message });
     }
   } else {

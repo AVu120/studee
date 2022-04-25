@@ -17,7 +17,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
-import { login, resetPassword, signUp } from "services/auth";
+import { logIn, resetPassword, signUp } from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
@@ -97,7 +97,7 @@ const Landing: NextPage = () => {
 
   const callToActionFunctions = {
     login: () =>
-      login(
+      logIn(
         email,
         password,
         setLoading,
@@ -106,10 +106,8 @@ const Landing: NextPage = () => {
         router,
         toast
       ),
-    signup: () =>
-      signUp(email, password, setLoading, setErrors, setNotification),
-    resetPassword: () =>
-      resetPassword(email, setLoading, setErrors, setNotification),
+    signup: () => signUp(email, password, setLoading, setNotification),
+    resetPassword: () => resetPassword(email, setLoading, setNotification),
   };
   const callToActionButtonMsg = callToActionLabels[userAction];
   return (
@@ -228,7 +226,6 @@ const Landing: NextPage = () => {
         <Acknowledgement
           isOpen={!!notification.message}
           onClose={() => {
-            setUserAction("login");
             setNotification({ title: "", message: "" });
           }}
           message={notification.message}
