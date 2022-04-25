@@ -1,10 +1,21 @@
-import { Box, Heading, Input, Textarea, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Input,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Textarea,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
-
-import styles from "./DailyPlan.module.scss";
 
 interface Props {
   dayOfWeek: TDayOfWeek;
@@ -52,47 +63,52 @@ const UnmemoizedDailyPlan = ({
       }));
     };
   return (
-    <Box className={styles.container} boxShadow="lg">
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>
-              <Heading as="h2" size="sm">
+    <Box
+      boxShadow="md"
+      padding="1rem"
+      borderRadius="1rem"
+      marginBottom="1rem"
+      border="1px"
+      borderColor="gray.300"
+    >
+      <TableContainer>
+        <Table variant="striped" size="sm">
+          <Thead>
+            <Tr>
+              <Th textDecorationLine="underline" fontSize="sm">
                 {`${capitalizeWord(dayOfWeek)} ${date}`}
-              </Heading>
-            </th>
-            <th className={styles.tableHeaderTimeCell}>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: 7 }).map((_: any, i: number) => (
-            // Use of index here is fine as there's no sorting and indexes will be
-            // linked to input as there will always only be 7 task inputs.
-            // eslint-disable-next-line react/no-array-index-key
-            <tr key={`${dayOfWeek}-task-${i + 1}`}>
-              <td className={styles.tableTaskCell}>
-                <Input
-                  variant="unstyled"
-                  // placeholder={`Task ${i + 1}`}
-                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name || ""}
-                  onChange={changeTask(`${i + 1}` as TTaskNumber, "name")}
-                />
-                {/* <span className={styles.tableTaskCellContent}>Task Input</span> */}
-              </td>
-              <td className={styles.tableTimeCell}>
-                <Input
-                  variant="unstyled"
-                  // placeholder={`Time ${i + 1}`}
-                  value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time || ""}
-                  onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </Th>
+              <Th fontSize="sm">Time</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {Array.from({ length: 7 }).map((_: any, i: number) => (
+              <Tr key={`${dayOfWeek}-task-${i + 1}`}>
+                <Td width="70%">
+                  <Input
+                    variant="unstyled"
+                    value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name || ""}
+                    onChange={changeTask(`${i + 1}` as TTaskNumber, "name")}
+                    isTruncated
+                    fontSize="xs"
+                  />
+                </Td>
+                <Td>
+                  <Input
+                    variant="unstyled"
+                    value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time || ""}
+                    onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
+                    isTruncated
+                    fontSize="xs"
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
       <VStack pb="3">
-        <Heading as="h3" size="sm" mt="2">
+        <Heading as="h3" size="xs" mt="2">
           Post-Study Award
         </Heading>
         <Textarea
@@ -100,7 +116,7 @@ const UnmemoizedDailyPlan = ({
           value={data?.postStudyAward || ""}
           onChange={changeNotes("postStudyAward")}
         />
-        <Heading as="h3" size="sm">
+        <Heading as="h3" size="xs">
           Achievements
         </Heading>
         <Textarea
@@ -108,7 +124,7 @@ const UnmemoizedDailyPlan = ({
           value={data?.achievements || ""}
           onChange={changeNotes("achievements")}
         />
-        <Heading as="h3" size="sm">
+        <Heading as="h3" size="xs">
           Reflections
         </Heading>
         <Textarea
