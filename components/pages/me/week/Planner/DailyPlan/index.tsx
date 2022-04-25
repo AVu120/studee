@@ -16,7 +16,7 @@ import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
 
-import { Card } from "./Card";
+import { Card } from "../../../../../common/Card";
 
 interface Props {
   dayOfWeek: TDayOfWeek;

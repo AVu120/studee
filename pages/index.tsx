@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Collapse,
   Divider,
@@ -12,7 +11,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import AcknowledgementModal from "components/modals";
+import { Acknowledgement } from "components/common/modals/Acknowledgement";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -197,7 +196,7 @@ const Landing: NextPage = () => {
           </Collapse>
         </form>
         {/* Account successfully created modal */}
-        <AcknowledgementModal
+        <Acknowledgement
           isOpen={!!notification.message}
           onClose={() => {
             setUserAction("login");

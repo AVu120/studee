@@ -16,7 +16,7 @@ interface Props {
   message: string;
   title: string;
 }
-const AcknowledgementModal = ({ isOpen, onClose, message, title }: Props) => (
+export const Acknowledgement = ({ isOpen, onClose, message, title }: Props) => (
   <>
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -36,5 +36,3 @@ const AcknowledgementModal = ({ isOpen, onClose, message, title }: Props) => (
     </Modal>
   </>
 );
-
-export default AcknowledgementModal;

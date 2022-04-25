@@ -1,6 +1,15 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Button, HStack, IconButton, Text, useToast } from "@chakra-ui/react";
-import { Planner } from "components/Planner";
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
+import { WarningPrompt } from "components/common/modals/WarningPrompt";
+import { Planner } from "components/pages/me/week/Planner";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -50,6 +59,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
   const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
+  const [discardUnsavedChangesAction, setDiscardUnsavedChangesAction] =
+    useState<"showNextWeek" | "showLastWeek" | "">("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -117,15 +128,21 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
         // @ts-ignore
         style={{ "--bgColor": colors.secondary }}
       >
-        {" "}
-        <Button
-          type="submit"
-          variant="primary"
-          onClick={onSave}
-          disabled={!hasUnsavedChanges || isSaving}
-        >
-          {isSaving ? "Saving..." : "Save"}
-        </Button>
+        <Box position="relative">
+          <Button
+            type="submit"
+            variant="primary"
+            onClick={onSave}
+            disabled={!hasUnsavedChanges || isSaving}
+          >
+            {isSaving ? "Saving..." : "Save"}
+          </Button>
+          {hasUnsavedChanges && (
+            <Text fontSize="xs" width="max-content" position="absolute">
+              You have unsaved changes...
+            </Text>
+          )}
+        </Box>
         <HStack>
           <IconButton
             variant="outline"
@@ -148,7 +165,11 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
                 }}
               />
             }
-            onClick={onShowPreviousWeek}
+            onClick={
+              hasUnsavedChanges
+                ? () => setDiscardUnsavedChangesAction("showLastWeek")
+                : onShowPreviousWeek
+            }
             isLoading={isLoadingPriorWeekData}
           />
           <Text
@@ -177,7 +198,11 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
                 }}
               />
             }
-            onClick={onShowNextWeek}
+            onClick={
+              hasUnsavedChanges
+                ? () => setDiscardUnsavedChangesAction("showNextWeek")
+                : onShowNextWeek
+            }
             isLoading={isLoadingNextWeekData}
           />
         </HStack>
@@ -195,6 +220,18 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
         <Planner
           weeklyPlan={weeklyPlanState}
           setWeeklyPlanState={setWeeklyPlanState}
+        />
+        <WarningPrompt
+          isOpen={!!discardUnsavedChangesAction}
+          onClose={() => setDiscardUnsavedChangesAction("")}
+          onConfirm={() => {
+            if (discardUnsavedChangesAction === "showNextWeek")
+              onShowNextWeek();
+            else onShowPreviousWeek();
+            setDiscardUnsavedChangesAction("");
+          }}
+          title="Discard unsaved changes?"
+          prompt="Your changes will be lost. Do you want to proceed anyway?"
         />
       </main>
 
