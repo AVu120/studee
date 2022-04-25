@@ -18,6 +18,8 @@
   "rules": {
     // GENERIC RULES
     "prettier/prettier": "error",
+    "no-param-reassign": "off",
+    "no-alert": "off",
     // REACT RULES
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
@@ -43,6 +45,6 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-explicit-any": "off",
     // GENERAL:
-    "no-param-reassign": "off"
+   
   }
 }

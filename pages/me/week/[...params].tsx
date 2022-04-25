@@ -65,7 +65,6 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
     useState<TDiscardUnsavedChangesActions | "">("");
 
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState("");
   const toast = useToast();
 
   useEffect(() => {
@@ -80,12 +79,11 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
 
   const clientStartDate = formatDateForClient(serverStartDate);
 
-  const onLogOut = () => logOut(setIsLoggingOut, setError, router, toast);
+  const onLogOut = () => logOut(setIsLoggingOut, router, toast);
   const onSave = () =>
     updateWeeklyPlan(
       weeklyPlanState,
       setIsSaving,
-      setError,
       toast,
       setHasUnsavedChanged,
       savedWeeklyPlanRef
@@ -97,7 +95,6 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       nextStartDate,
       setWeeklyPlanState,
       setIsLoadingNextWeekData,
-      setError,
       savedWeeklyPlanRef,
       router,
       setHasUnsavedChanged
@@ -110,7 +107,6 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
       previousStartDate,
       setWeeklyPlanState,
       setIsLoadingPriorWeekData,
-      setError,
       savedWeeklyPlanRef,
       router,
       setHasUnsavedChanged

@@ -10,7 +10,6 @@ import { IWeeklyPlan } from "utils/types/weeklyPlans";
 export const updateWeeklyPlan = (
   weeklyPlanState: IWeeklyPlan,
   setIsSaving: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<SetStateAction<string>>,
   toast: any,
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>
@@ -40,7 +39,7 @@ export const updateWeeklyPlan = (
       savedWeeklyPlanRef.current = weeklyPlanState;
     })
     .catch((error) => {
-      setError(error.message);
+      alert(error.message);
     })
     .finally(() => setIsSaving(false));
 };
@@ -49,7 +48,6 @@ export const getWeeklyPlanOnClient = (
   startDate: string,
   setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<SetStateAction<string>>,
   savedWeeklyPlanRef: MutableRefObject<IWeeklyPlan>,
   router: NextRouter,
   setHasUnsavedChanged: Dispatch<SetStateAction<boolean>>
@@ -58,7 +56,6 @@ export const getWeeklyPlanOnClient = (
   setIsLoading(true);
   fetch(`/api/weeklyPlans?startDate=${startDate}`)
     .then((res) => {
-      console.log({ res });
       if (!res.ok) {
         throw new Error(statusText);
       }
@@ -66,7 +63,6 @@ export const getWeeklyPlanOnClient = (
     })
     .then((res) => {
       // Empty obj is returned if no weekly plan is found in db.
-      console.log({ res2: res });
       const updatedWeeklyState = isEmptyObject(res)
         ? createEmptyWeeklyPlan(startDate)
         : res;
@@ -76,7 +72,7 @@ export const getWeeklyPlanOnClient = (
       return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
     })
     .catch((error) => {
-      setError(error.message);
+      alert(error.message);
     })
     .finally(() => {
       setIsLoading(false);

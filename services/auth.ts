@@ -150,7 +150,6 @@ export const signUp = (
 
 export const logOut = (
   setIsLoggingOut: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<SetStateAction<string>>,
   router: NextRouter,
   toast: any
 ) => {
@@ -173,7 +172,7 @@ export const logOut = (
       router.push(`/`);
     })
     .catch((error) => {
-      setError(error.message);
+      alert(error.message);
     })
     .finally(() => setIsLoggingOut(false));
 };
