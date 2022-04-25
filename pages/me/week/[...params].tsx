@@ -6,7 +6,6 @@ import {
   IconButton,
   Text,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
 import { WarningPrompt } from "components/common/modals/WarningPrompt";
 import { Planner } from "components/pages/me/week/Planner";
@@ -34,6 +33,9 @@ import { getWeeklyPlanOnServer } from "../../api/weeklyPlans";
 interface Props {
   weeklyPlan: IWeeklyPlan | null;
 }
+
+type TDiscardUnsavedChangesActions = "showNextWeek" | "showLastWeek" | "logOut";
+
 const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const router = useRouter();
 
@@ -60,7 +62,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
   const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
   const [discardUnsavedChangesAction, setDiscardUnsavedChangesAction] =
-    useState<"showNextWeek" | "showLastWeek" | "">("");
+    useState<TDiscardUnsavedChangesActions | "">("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -115,6 +117,12 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
     );
   };
 
+  const discardUnsavedChangesActions = {
+    showNextWeek: onShowNextWeek,
+    showLastWeek: onShowPreviousWeek,
+    logOut: onLogOut,
+  };
+
   return (
     <div className={styles.page}>
       <Head>
@@ -156,6 +164,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
               lg: "-2",
               xl: "-1",
             }}
+            _hover={{ bg: "transparent" }}
             icon={
               <ChevronLeftIcon
                 fontSize={{
@@ -189,6 +198,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
               lg: "-2",
               xl: "-1",
             }}
+            _hover={{ bg: "transparent" }}
             icon={
               <ChevronRightIcon
                 fontSize={{
@@ -209,7 +219,11 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
         <Button
           type="submit"
           variant="secondary"
-          onClick={onLogOut}
+          onClick={
+            hasUnsavedChanges
+              ? () => setDiscardUnsavedChangesAction("logOut")
+              : onLogOut
+          }
           disabled={isLoggingOut}
         >
           {isLoggingOut ? "Loading..." : "Log Out "}
@@ -225,9 +239,9 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
           isOpen={!!discardUnsavedChangesAction}
           onClose={() => setDiscardUnsavedChangesAction("")}
           onConfirm={() => {
-            if (discardUnsavedChangesAction === "showNextWeek")
-              onShowNextWeek();
-            else onShowPreviousWeek();
+            discardUnsavedChangesActions[
+              discardUnsavedChangesAction as TDiscardUnsavedChangesActions
+            ]();
             setDiscardUnsavedChangesAction("");
           }}
           title="Discard unsaved changes?"

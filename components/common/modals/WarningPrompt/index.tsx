@@ -8,7 +8,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { LegacyRef, MutableRefObject, RefObject, useRef } from "react";
 
 interface Props {
   onClose: () => void;
@@ -24,13 +24,13 @@ export const WarningPrompt = ({
   isOpen,
   onConfirm,
 }: Props) => {
-  const cancelRef = useRef();
+  // @ts-ignore
+  const cancelRef: RefObject<HTMLButtonElement> = useRef();
 
   return (
     <>
       <AlertDialog
         motionPreset="slideInBottom"
-        // @ts-ignore
         leastDestructiveRef={cancelRef}
         onClose={onClose}
         isOpen={isOpen}
@@ -43,7 +43,6 @@ export const WarningPrompt = ({
           <AlertDialogCloseButton />
           <AlertDialogBody>{prompt}</AlertDialogBody>
           <AlertDialogFooter>
-            {/* // @ts-ignore */}
             <Button onClick={onClose} ref={cancelRef}>
               No
             </Button>
