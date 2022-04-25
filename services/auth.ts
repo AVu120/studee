@@ -81,18 +81,30 @@ export const login = (
     .catch((error) => {
       const errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {
-        setError((currentErrors) => ({
+        return setError((currentErrors) => ({
           ...currentErrors,
           email: "This email is not registered with us. Please sign up.",
         }));
       }
 
       if (errorMessage.includes("wrong-password")) {
-        setError((currentErrors) => ({
+        return setError((currentErrors) => ({
           ...currentErrors,
           password: [{ message: "Wrong password." }],
         }));
       }
+
+      if (errorMessage.includes("too-many-requests")) {
+        return setError((currentErrors) => ({
+          ...currentErrors,
+          email: "You are sending too many requests. Please try again later.",
+        }));
+      }
+
+      return setError((currentErrors) => ({
+        ...currentErrors,
+        email: errorMessage,
+      }));
     })
     .finally(() => setLoading(false));
 };

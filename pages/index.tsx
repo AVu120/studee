@@ -22,7 +22,7 @@ import styles from "styles/pages/Home.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
 
-type TUserAction = "login" | "signup";
+type TUserAction = "login" | "signup" | "resetPassword";
 const Landing: NextPage = () => {
   // Temporary state until later when login and signup form are moved to modals
   // when the landing page is revamped.
@@ -54,9 +54,12 @@ const Landing: NextPage = () => {
   useEffect(() => {
     setErrors((currentErrors) => ({
       ...currentErrors,
-      password: passwordSchema.validate(password, { details: true }),
+      password:
+        userAction === "resetPassword"
+          ? []
+          : passwordSchema.validate(password, { details: true }),
     }));
-  }, [password]);
+  }, [password, userAction]);
 
   const changeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -86,7 +89,28 @@ const Landing: NextPage = () => {
     setPassword("");
   };
 
-  const callToActionButtonMsg = userAction === "login" ? "Log In" : "Sign Up";
+  const callToActionLabels = {
+    login: "Log In",
+    signup: "Sign Up",
+    resetPassword: "Reset Password",
+  };
+
+  const callToActionFunctions = {
+    login: () =>
+      login(
+        email,
+        password,
+        setLoading,
+        setErrors,
+        setNotification,
+        router,
+        toast
+      ),
+    signup: () =>
+      signUp(email, password, setLoading, setErrors, setNotification),
+    resetPassword: () => alert("Reset Password"),
+  };
+  const callToActionButtonMsg = callToActionLabels[userAction];
   return (
     <div className={styles.container}>
       <Head>
@@ -107,17 +131,7 @@ const Landing: NextPage = () => {
           onSubmit={(e) => {
             e.preventDefault();
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            userAction === "login"
-              ? login(
-                  email,
-                  password,
-                  setLoading,
-                  setErrors,
-                  setNotification,
-                  router,
-                  toast
-                )
-              : signUp(email, password, setLoading, setErrors, setNotification);
+            callToActionFunctions[userAction]();
           }}
         >
           <FormControl isInvalid={touched.email && !!errors.email}>
@@ -134,26 +148,28 @@ const Landing: NextPage = () => {
 
             <FormErrorMessage>{errors.email}</FormErrorMessage>
           </FormControl>
-          <FormControl
-            isInvalid={touched.password && !!errors.password.length}
-            mt="2"
-          >
-            <FormLabel htmlFor="password" mb="-0.1">
-              Password
-            </FormLabel>
-            <Input
-              id="password"
-              type="password"
-              onChange={changePassword}
-              // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
-              onBlur={blurPasswordField}
-              value={password}
-            />
-            {errors.password.map(({ message }) => (
-              <FormErrorMessage key={message}>{message}</FormErrorMessage>
-            ))}
-          </FormControl>
+          {userAction !== "resetPassword" && (
+            <FormControl
+              isInvalid={touched.password && !!errors.password.length}
+              mt="2"
+            >
+              <FormLabel htmlFor="password" mb="-0.1">
+                Password
+              </FormLabel>
+              <Input
+                id="password"
+                type="password"
+                onChange={changePassword}
+                // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+                onBlur={blurPasswordField}
+                value={password}
+              />
+              {errors.password.map(({ message }) => (
+                <FormErrorMessage key={message}>{message}</FormErrorMessage>
+              ))}
+            </FormControl>
+          )}
 
           <Button
             mt={4}
@@ -161,19 +177,19 @@ const Landing: NextPage = () => {
             isDisabled={!!errors.email || !!errors.password.length}
             variant="primary"
           >
-            {/* // eslint-disable-next-line no-nested-ternary */}
             {loading ? "Loading..." : callToActionButtonMsg}
           </Button>
-          {userAction === "login" ? (
+          {userAction === "login" && (
             <Text
               textStyle="a"
               as="a"
               mt="2"
-              onClick={() => alert("Forgot password flow initiated.")}
+              onClick={() => setUserAction("resetPassword")}
             >
               Forgot your password?
             </Text>
-          ) : (
+          )}
+          {userAction === "signup" && (
             <Flex>
               <Text mt="2" mr="1">
                 Already have an account?
@@ -182,6 +198,16 @@ const Landing: NextPage = () => {
                 Log in
               </Text>
             </Flex>
+          )}
+          {userAction === "resetPassword" && (
+            <Text
+              textStyle="a"
+              as="a"
+              mt="2"
+              onClick={() => setUserAction("login")}
+            >
+              Back
+            </Text>
           )}
 
           <Collapse in={userAction === "login"} animateOpacity>
