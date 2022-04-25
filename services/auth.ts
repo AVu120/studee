@@ -127,7 +127,6 @@ export const signUp = (
     },
   })
     .then((res) => {
-      console.log({ res1: res });
       statusText = res.statusText;
       if (!res.ok) {
         throw new Error(statusText);
@@ -135,7 +134,6 @@ export const signUp = (
       return res.json();
     })
     .then((res) => {
-      console.log({ res2: res });
       setNotification({
         title: statusText,
         message: res.message,
