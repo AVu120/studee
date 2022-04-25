@@ -84,7 +84,7 @@ const UnmemoizedDailyPlan = ({
                     value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.name || ""}
                     onChange={changeTask(`${i + 1}` as TTaskNumber, "name")}
                     isTruncated
-                    fontSize="xs"
+                    fontSize="sm"
                   />
                 </Td>
                 <Td>
@@ -93,7 +93,7 @@ const UnmemoizedDailyPlan = ({
                     value={data?.tasks?.[`${i + 1}` as TTaskNumber]?.time || ""}
                     onChange={changeTask(`${i + 1}` as TTaskNumber, "time")}
                     isTruncated
-                    fontSize="xs"
+                    fontSize="sm"
                   />
                 </Td>
               </Tr>
