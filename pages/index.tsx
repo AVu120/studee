@@ -17,7 +17,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
-import { login, signUp } from "services/auth";
+import { login, resetPassword, signUp } from "services/auth";
 import styles from "styles/pages/Home.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
@@ -108,7 +108,8 @@ const Landing: NextPage = () => {
       ),
     signup: () =>
       signUp(email, password, setLoading, setErrors, setNotification),
-    resetPassword: () => alert("Reset Password"),
+    resetPassword: () =>
+      resetPassword(email, setLoading, setErrors, setNotification),
   };
   const callToActionButtonMsg = callToActionLabels[userAction];
   return (
@@ -124,7 +125,7 @@ const Landing: NextPage = () => {
           Welcome to Studee
         </Heading>
         <Heading variant="h2" size="h2" as="h2" mb="1rem">
-          All your study planning in one app.
+          All your study planning in one place.
         </Heading>
         <form
           className={styles.form}

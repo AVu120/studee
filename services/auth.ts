@@ -186,3 +186,50 @@ export const logOut = (
     })
     .finally(() => setIsLoggingOut(false));
 };
+
+export const resetPassword = (
+  email: string,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+  setError: Dispatch<
+    SetStateAction<{
+      email: string;
+      password: { arguments?: number; message: string; validation?: string }[];
+    }>
+  >,
+  setNotification: Dispatch<
+    SetStateAction<{
+      title: string;
+      message: string;
+    }>
+  >
+) => {
+  let statusText: string;
+  setLoading(true);
+  fetch(`/api/resetPassword`, {
+    method: "POST",
+    body: JSON.stringify({
+      email,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((res) => {
+      statusText = res.statusText;
+      if (!res.ok) {
+        throw new Error(statusText);
+      }
+      return res.json();
+    })
+    .then((res) => {
+      setNotification({
+        title: statusText,
+        message: res.message,
+      });
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      setError((currentErrors) => ({ ...currentErrors, email: errorMessage }));
+    })
+    .finally(() => setLoading(false));
+};
