@@ -1,7 +1,7 @@
 import { Heading, Textarea } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 
-import { Card } from "../../../../../common/Card";
+import { Card } from "../../../../common/Card";
 
 interface Props {
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;

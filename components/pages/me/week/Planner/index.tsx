@@ -4,7 +4,7 @@ import { daysOfWeek } from "utils/constants/dateTimes";
 import type { IWeeklyPlan } from "utils/types/weeklyPlans";
 
 import { DailyPlan } from "./DailyPlan";
-import { Notes } from "./DailyPlan/Notes";
+import { Notes } from "./Notes";
 
 interface Props {
   weeklyPlan: IWeeklyPlan;
