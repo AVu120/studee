@@ -166,6 +166,7 @@ const UnmemoizedDailyPlan = ({
                           isComplete ? "line-through" : "none"
                         }
                         width="calc(100% + 40px)"
+                        placeholder={`Task ${taskNumberString}`}
                       />
                     </Td>
                     <Td isNumeric>
