@@ -1,5 +1,6 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Heading,
   Input,
   Table,
@@ -14,7 +15,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MenuButtonComponent } from "components/common/MenuButton";
-import { ChangeEvent, Dispatch, memo, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  memo,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from "react";
+import { getCurrentDayOfWeek } from "utils/helpers/dateTime";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
@@ -37,6 +46,22 @@ const UnmemoizedDailyPlan = ({
   data,
   setWeeklyPlanState,
 }: Props) => {
+  const dailyPlanRef = useRef(null);
+
+  // Automatically scroll to today's daily plan on initial load of the page.
+  useEffect(() => {
+    if (getCurrentDayOfWeek() === dayOfWeek) {
+      const targetYPosition =
+        // @ts-ignore
+        dailyPlanRef?.current?.getBoundingClientRect().top +
+        window.pageYOffset -
+        90;
+      window.scrollTo({
+        top: targetYPosition,
+        behavior: "smooth",
+      });
+    }
+  }, []);
   const changeTask =
     (taskNumber: TTaskNumber) => (e: ChangeEvent<HTMLInputElement>) => {
       setWeeklyPlanState((currentWeeklyPlanState) => ({
@@ -104,104 +129,108 @@ const UnmemoizedDailyPlan = ({
       }));
     };
   return (
-    <Card>
-      <TableContainer>
-        <Table variant="striped" size="sm">
-          <Thead>
-            <Tr>
-              <Th textDecorationLine="underline" fontSize="sm">
-                {`${capitalizeWord(dayOfWeek)} ${date}`}
-              </Th>
-              <Th fontSize="sm">
-                <Text position="relative" right="-2">
-                  Action
-                </Text>
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {Array.from({ length: 7 }).map((_: any, i: number) => {
-              const taskNumberString = `${i + 1}`;
-              const isComplete =
-                data?.tasks?.[taskNumberString as TTaskNumber]?.isComplete;
-              return (
-                <Tr key={`${dayOfWeek}-task-${i + 1}`}>
-                  <Td width="100%">
-                    <Input
-                      variant="unstyled"
-                      value={
-                        data?.tasks?.[taskNumberString as TTaskNumber]?.name ||
-                        ""
-                      }
-                      onChange={changeTask(taskNumberString as TTaskNumber)}
-                      isTruncated
-                      fontSize="sm"
-                      textDecorationLine={isComplete ? "line-through" : "none"}
-                      width="calc(100% + 40px)"
-                    />
-                  </Td>
-                  <Td isNumeric>
-                    {data?.tasks?.[taskNumberString as TTaskNumber]?.name && (
-                      <MenuButtonComponent
-                        ariaLabel="Task actions menu button"
-                        icon={HamburgerIcon}
-                        options={[
-                          {
-                            title: "Clear task",
-                            onClick: () =>
-                              clearTask(taskNumberString as TTaskNumber),
-                          },
-                          {
-                            title: `${
-                              isComplete ? "Uncomplete" : "Complete"
-                            } task`,
-                            onClick: () =>
-                              toggleTaskCompleteness(
-                                taskNumberString as TTaskNumber
-                              ),
-                            isHidden:
-                              !data?.tasks?.[taskNumberString as TTaskNumber]
-                                ?.name,
-                          },
-                        ]}
-                        boxSize="1rem"
-                        style={{ position: "relative", right: "-10px" }}
+    <Box ref={dailyPlanRef}>
+      <Card>
+        <TableContainer>
+          <Table variant="striped" size="sm">
+            <Thead>
+              <Tr>
+                <Th textDecorationLine="underline" fontSize="sm">
+                  {`${capitalizeWord(dayOfWeek)} ${date}`}
+                </Th>
+                <Th fontSize="sm">
+                  <Text position="relative" right="-2">
+                    Action
+                  </Text>
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {Array.from({ length: 7 }).map((_: any, i: number) => {
+                const taskNumberString = `${i + 1}`;
+                const isComplete =
+                  data?.tasks?.[taskNumberString as TTaskNumber]?.isComplete;
+                return (
+                  <Tr key={`${dayOfWeek}-task-${i + 1}`}>
+                    <Td width="100%">
+                      <Input
+                        variant="unstyled"
+                        value={
+                          data?.tasks?.[taskNumberString as TTaskNumber]
+                            ?.name || ""
+                        }
+                        onChange={changeTask(taskNumberString as TTaskNumber)}
+                        isTruncated
+                        fontSize="sm"
+                        textDecorationLine={
+                          isComplete ? "line-through" : "none"
+                        }
+                        width="calc(100% + 40px)"
                       />
-                    )}
-                  </Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      <VStack pb="3">
-        <Heading as="h3" size="xs" mt="2">
-          Post-Study Award
-        </Heading>
-        <Textarea
-          resize="none"
-          value={data?.postStudyAward || ""}
-          onChange={changeNotes("postStudyAward")}
-        />
-        <Heading as="h3" size="xs">
-          Achievements
-        </Heading>
-        <Textarea
-          resize="none"
-          value={data?.achievements || ""}
-          onChange={changeNotes("achievements")}
-        />
-        <Heading as="h3" size="xs">
-          Reflections
-        </Heading>
-        <Textarea
-          resize="none"
-          value={data?.reflections || ""}
-          onChange={changeNotes("reflections")}
-        />
-      </VStack>
-    </Card>
+                    </Td>
+                    <Td isNumeric>
+                      {data?.tasks?.[taskNumberString as TTaskNumber]?.name && (
+                        <MenuButtonComponent
+                          ariaLabel="Task actions menu button"
+                          icon={HamburgerIcon}
+                          options={[
+                            {
+                              title: "Clear task",
+                              onClick: () =>
+                                clearTask(taskNumberString as TTaskNumber),
+                            },
+                            {
+                              title: `${
+                                isComplete ? "Uncomplete" : "Complete"
+                              } task`,
+                              onClick: () =>
+                                toggleTaskCompleteness(
+                                  taskNumberString as TTaskNumber
+                                ),
+                              isHidden:
+                                !data?.tasks?.[taskNumberString as TTaskNumber]
+                                  ?.name,
+                            },
+                          ]}
+                          boxSize="1rem"
+                          style={{ position: "relative", right: "-10px" }}
+                        />
+                      )}
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+        <VStack pb="3">
+          <Heading as="h3" size="xs" mt="2">
+            Post-Study Award
+          </Heading>
+          <Textarea
+            resize="none"
+            value={data?.postStudyAward || ""}
+            onChange={changeNotes("postStudyAward")}
+          />
+          <Heading as="h3" size="xs">
+            Achievements
+          </Heading>
+          <Textarea
+            resize="none"
+            value={data?.achievements || ""}
+            onChange={changeNotes("achievements")}
+          />
+          <Heading as="h3" size="xs">
+            Reflections
+          </Heading>
+          <Textarea
+            resize="none"
+            value={data?.reflections || ""}
+            onChange={changeNotes("reflections")}
+          />
+        </VStack>
+      </Card>
+    </Box>
   );
 };
 
