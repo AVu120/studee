@@ -22,11 +22,11 @@ import styles from "styles/pages/Home.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
 
-type TUserAction = "login" | "signup" | "resetPassword";
+type TUserAction = "logIn" | "signUp" | "resetPassword";
 const Landing: NextPage = () => {
-  // Temporary state until later when login and signup form are moved to modals
+  // Temporary state until later when logIn and signUp form are moved to modals
   // when the landing page is revamped.
-  const [userAction, setUserAction] = useState<TUserAction>("login");
+  const [userAction, setUserAction] = useState<TUserAction>("logIn");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -34,7 +34,7 @@ const Landing: NextPage = () => {
     email: string;
     password: { arguments?: number; message: string; validation?: string }[];
   }>({ email: "", password: [] });
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<{
     title: string;
     message: string;
@@ -90,26 +90,26 @@ const Landing: NextPage = () => {
   };
 
   const callToActionLabels = {
-    login: "Log In",
-    signup: "Sign Up",
+    logIn: "Log In",
+    signUp: "Sign Up",
     resetPassword: "Reset Password",
   };
 
   const callToActionFunctions = {
-    login: () =>
+    logIn: () =>
       logIn(
         email,
         password,
-        setLoading,
+        setIsLoading,
         setErrors,
         setNotification,
         router,
         toast
       ),
-    signup: () => signUp(email, password, setLoading, setNotification),
-    resetPassword: () => resetPassword(email, setLoading, setNotification),
+    signUp: () => signUp(email, password, setIsLoading, setNotification),
+    resetPassword: () => resetPassword(email, setIsLoading, setNotification),
   };
-  const callToActionButtonMsg = callToActionLabels[userAction];
+  const callToActionLabel = callToActionLabels[userAction];
   return (
     <div className={styles.container}>
       <Head>
@@ -173,12 +173,12 @@ const Landing: NextPage = () => {
           <Button
             mt={4}
             type="submit"
-            isDisabled={!!errors.email || !!errors.password.length}
+            isDisabled={!!errors.email || !!errors.password.length || isLoading}
             variant="primary"
           >
-            {loading ? "Loading..." : callToActionButtonMsg}
+            {isLoading ? "Loading..." : callToActionLabel}
           </Button>
-          {userAction === "login" && (
+          {userAction === "logIn" && (
             <Text
               textStyle="a"
               as="a"
@@ -188,12 +188,12 @@ const Landing: NextPage = () => {
               Forgot your password?
             </Text>
           )}
-          {userAction === "signup" && (
+          {userAction === "signUp" && (
             <Flex>
               <Text mt="2" mr="1">
                 Already have an account?
               </Text>
-              <Text as="a" mt="2" onClick={() => changeUserAction("login")}>
+              <Text as="a" mt="2" onClick={() => changeUserAction("logIn")}>
                 Log in
               </Text>
             </Flex>
@@ -203,19 +203,19 @@ const Landing: NextPage = () => {
               textStyle="a"
               as="a"
               mt="2"
-              onClick={() => setUserAction("login")}
+              onClick={() => setUserAction("logIn")}
             >
               Back
             </Text>
           )}
 
-          <Collapse in={userAction === "login"} animateOpacity>
+          <Collapse in={userAction === "logIn"} animateOpacity>
             <Divider />
             <Button
               mt={1}
               type="button"
               variant="secondary"
-              onClick={() => changeUserAction("signup")}
+              onClick={() => changeUserAction("signUp")}
               w="100%"
             >
               Create New Account
