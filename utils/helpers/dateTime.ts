@@ -1,3 +1,20 @@
+import { daysOfWeek } from "utils/constants/dateTimes";
+
+/**
+ * @param date Date in "YYYY/MM/DD" format.
+ * @returns Date Object
+ */
+const getDateObject = (date: string) => {
+  const [year, month, day] = date
+    .split("/")
+    .map((numString) => Number(numString));
+
+  return new Date(year, month - 1, day);
+};
+
+const convertDateObjToStrServerFormat = (dateObj: Date) =>
+  `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()}`;
+
 /**
  * Get date string of most recent Monday (aka start of week).
  * @returns Date in "YYYY/MM/DD" format.
@@ -12,9 +29,7 @@ export const getCurrentStartDate = () => {
     startDate.setDate(startDate.getDate() - offsetDaysToStartDate);
   }
 
-  return `${startDate.getFullYear()}/${
-    startDate.getMonth() + 1
-  }/${startDate.getDate()}`;
+  return convertDateObjToStrServerFormat(startDate);
 };
 
 /**
@@ -40,20 +55,10 @@ export const getDateInUrlPath = (queryParams: string[]) =>
  * @returns Next week's start date (Monday) in "YYYY/MM/DD" format.
  */
 export const getNextStartDate = (startDate: string) => {
-  const [startDateYear, startDateMonth, startDateDay] = startDate
-    .split("/")
-    .map((numString) => Number(numString));
-
-  const nextStartDateObject = new Date(
-    startDateYear,
-    startDateMonth - 1,
-    startDateDay
-  );
+  const nextStartDateObject = getDateObject(startDate);
 
   nextStartDateObject.setDate(nextStartDateObject.getDate() + 7);
-  return `${nextStartDateObject.getFullYear()}/${
-    nextStartDateObject.getMonth() + 1
-  }/${nextStartDateObject.getDate()}`;
+  return convertDateObjToStrServerFormat(nextStartDateObject);
 };
 
 /**
@@ -61,18 +66,13 @@ export const getNextStartDate = (startDate: string) => {
  * @returns Previous week's start date (Monday) in "YYYY/MM/DD" format.
  */
 export const getPreviousStartDate = (startDate: string) => {
-  const [startDateYear, startDateMonth, startDateDay] = startDate
-    .split("/")
-    .map((numString) => Number(numString));
-
-  const previousStartDateObject = new Date(
-    startDateYear,
-    startDateMonth - 1,
-    startDateDay
-  );
+  const previousStartDateObject = getDateObject(startDate);
 
   previousStartDateObject.setDate(previousStartDateObject.getDate() - 7);
-  return `${previousStartDateObject.getFullYear()}/${
-    previousStartDateObject.getMonth() + 1
-  }/${previousStartDateObject.getDate()}`;
+  return convertDateObjToStrServerFormat(previousStartDateObject);
 };
+
+/**
+ * @returns today's day of the week e.g. "monday".
+ */
+export const getCurrentDayOfWeek = () => daysOfWeek[new Date().getDay()];
