@@ -8,6 +8,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Acknowledgement } from "components/common/modals/Acknowledgement";
+import { ConfirmPrompt } from "components/common/modals/ConfirmPrompt";
 import { WarningPrompt } from "components/common/modals/WarningPrompt";
 import { Planner } from "components/pages/me/week/Planner";
 import type { GetServerSideProps, NextPage } from "next";
@@ -62,6 +63,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoadingNextWeekData, setIsLoadingNextWeekData] = useState(false);
   const [isLoadingPriorWeekData, setIsLoadingPriorWeekData] = useState(false);
+  const [isAttemptingToLogOut, setIsAttemptingToLogOut] = useState(false);
   const [discardUnsavedChangesAction, setDiscardUnsavedChangesAction] =
     useState<TDiscardUnsavedChangesActions | "">("");
 
@@ -226,7 +228,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
           onClick={
             hasUnsavedChanges
               ? () => setDiscardUnsavedChangesAction("logOut")
-              : onLogOut
+              : () => setIsAttemptingToLogOut(true)
           }
           disabled={isLoggingOut}
         >
@@ -258,6 +260,17 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
           }}
           message={notification.message}
           title={notification.title}
+        />
+        <ConfirmPrompt
+          isOpen={isAttemptingToLogOut}
+          onClose={() => setIsAttemptingToLogOut(false)}
+          onConfirm={() => {
+            setIsAttemptingToLogOut(false);
+            onLogOut();
+          }}
+          title="Logging Out"
+          prompt="Are you sure you want to log out?"
+          action="Log Out"
         />
       </main>
 

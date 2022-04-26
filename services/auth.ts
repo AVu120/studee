@@ -180,6 +180,13 @@ export const logOut = (
         status: "success",
       });
       router.push(`/`);
+      toast({
+        title: `Redirecting...`,
+        position: "top",
+        isClosable: true,
+        duration: 2000,
+        status: "info",
+      });
     })
     .catch((error) => {
       alert(error.message);
