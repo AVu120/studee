@@ -35,7 +35,7 @@ export const MenuButtonComponent = ({
     />
     <MenuList>
       {options.map(({ title, onClick, isHidden }) => (
-        <MenuItem onClick={onClick} hidden={isHidden}>
+        <MenuItem onClick={onClick} hidden={isHidden} key={title}>
           {title}
         </MenuItem>
       ))}
