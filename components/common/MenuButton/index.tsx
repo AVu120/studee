@@ -21,7 +21,7 @@ export const MenuButtonComponent = ({
   boxSize,
   style,
 }: Props) => (
-  <Menu isLazy autoSelect>
+  <Menu isLazy autoSelect placement="top">
     <MenuButton
       as={IconButton}
       aria-label={ariaLabel}
