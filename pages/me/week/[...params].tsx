@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "services/auth";
 import { getWeeklyPlanOnClient, updateWeeklyPlan } from "services/weeklyPlans";
-import styles from "styles/pages/me/week.module.scss";
+import styles from "styles/pages/me/Week.module.scss";
 import colors from "styles/theme/colors";
 import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
 import {
@@ -38,7 +38,7 @@ interface Props {
 
 type TDiscardUnsavedChangesActions = "showNextWeek" | "showLastWeek" | "logOut";
 
-const Me: NextPage<Props> = ({ weeklyPlan }) => {
+const Week: NextPage<Props> = ({ weeklyPlan }) => {
   const router = useRouter();
 
   /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.
@@ -296,7 +296,7 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
   );
 };
 
-export default Me;
+export default Week;
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,

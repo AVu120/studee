@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { getUserData } from "pages/api/user";
 import { ChangeEvent, useEffect, useState } from "react";
 import { logIn, resetPassword, signUp } from "services/auth";
-import styles from "styles/pages/Home.module.scss";
+import styles from "styles/pages/Landing.module.scss";
 import { getCurrentStartDate } from "utils/helpers/dateTime";
 import passwordSchema from "utils/validators/password";
 
