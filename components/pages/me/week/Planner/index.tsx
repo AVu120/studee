@@ -54,6 +54,7 @@ export const Planner = ({ weeklyPlan, setWeeklyPlanState }: Props) => {
             data={weeklyPlan[dayOfWeek]}
             setWeeklyPlanState={setWeeklyPlanState}
             key={`${dayOfWeek}-daily-plan`}
+            weekStartDate={startDate}
           />
         );
       })}

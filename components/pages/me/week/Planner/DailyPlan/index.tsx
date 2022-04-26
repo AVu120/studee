@@ -23,7 +23,10 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { getCurrentDayOfWeek } from "utils/helpers/dateTime";
+import {
+  getCurrentDayOfWeek,
+  getCurrentStartDate,
+} from "utils/helpers/dateTime";
 import { capitalizeWord } from "utils/helpers/lodash";
 import { TDayOfWeek } from "utils/types/dateTime";
 import { IDayPlan, IWeeklyPlan } from "utils/types/weeklyPlans";
@@ -35,6 +38,7 @@ interface Props {
   date: string;
   data: IDayPlan | undefined;
   setWeeklyPlanState: Dispatch<SetStateAction<IWeeklyPlan>>;
+  weekStartDate: string;
 }
 
 const taskNumbers = ["1", "2", "3", "4", "5", "6", "7"] as const;
@@ -45,12 +49,16 @@ const UnmemoizedDailyPlan = ({
   date,
   data,
   setWeeklyPlanState,
+  weekStartDate,
 }: Props) => {
   const dailyPlanRef = useRef(null);
 
   // Automatically scroll to today's daily plan on initial load of the page.
   useEffect(() => {
-    if (getCurrentDayOfWeek() === dayOfWeek) {
+    if (
+      getCurrentDayOfWeek() === dayOfWeek &&
+      getCurrentStartDate() === weekStartDate
+    ) {
       const targetYPosition =
         // @ts-ignore
         dailyPlanRef?.current?.getBoundingClientRect().top +
