@@ -184,6 +184,8 @@ const Landing: NextPage = () => {
               as="a"
               mt="2"
               onClick={() => setUserAction("resetPassword")}
+              pointerEvents={isLoading ? "none" : "inherit"}
+              color={isLoading ? "grey" : "default"}
             >
               Forgot your password?
             </Text>
@@ -193,7 +195,13 @@ const Landing: NextPage = () => {
               <Text mt="2" mr="1">
                 Already have an account?
               </Text>
-              <Text as="a" mt="2" onClick={() => changeUserAction("logIn")}>
+              <Text
+                as="a"
+                mt="2"
+                onClick={() => changeUserAction("logIn")}
+                pointerEvents={isLoading ? "none" : "inherit"}
+                color={isLoading ? "grey" : "default"}
+              >
                 Log in
               </Text>
             </Flex>
@@ -204,6 +212,8 @@ const Landing: NextPage = () => {
               as="a"
               mt="2"
               onClick={() => setUserAction("logIn")}
+              pointerEvents={isLoading ? "none" : "inherit"}
+              color={isLoading ? "grey" : "default"}
             >
               Back
             </Text>
@@ -217,6 +227,7 @@ const Landing: NextPage = () => {
               variant="secondary"
               onClick={() => changeUserAction("signUp")}
               w="100%"
+              isDisabled={isLoading}
             >
               Create New Account
             </Button>
