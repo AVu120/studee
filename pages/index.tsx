@@ -106,8 +106,10 @@ const Landing: NextPage = () => {
         router,
         toast
       ),
-    signUp: () => signUp(email, password, setIsLoading, setNotification),
-    resetPassword: () => resetPassword(email, setIsLoading, setNotification),
+    signUp: () =>
+      signUp(email, password, setIsLoading, setErrors, setNotification),
+    resetPassword: () =>
+      resetPassword(email, setIsLoading, setErrors, setNotification),
   };
   const callToActionLabel = callToActionLabels[userAction];
   return (

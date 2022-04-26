@@ -113,6 +113,12 @@ export const signUp = (
   email: string,
   password: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
+  setErrors: Dispatch<
+    SetStateAction<{
+      email: string;
+      password: { arguments?: number; message: string; validation?: string }[];
+    }>
+  >,
   setNotification: Dispatch<
     SetStateAction<{
       title: string;
@@ -149,7 +155,14 @@ export const signUp = (
       });
     })
     .catch((error) => {
-      setNotification({
+      const errorMessage = error.message;
+      if (errorMessage.includes("email-already-in-use")) {
+        return setErrors((currentErrors) => ({
+          ...currentErrors,
+          email: "This email is already registered with us. Please log in.",
+        }));
+      }
+      return setNotification({
         title: "Error",
         message: error.message,
       });
@@ -160,6 +173,12 @@ export const signUp = (
 export const logOut = (
   setIsLoggingOut: Dispatch<SetStateAction<boolean>>,
   router: NextRouter,
+  setNotification: Dispatch<
+    SetStateAction<{
+      title: string;
+      message: string;
+    }>
+  >,
   toast: any
 ) => {
   setIsLoggingOut(true);
@@ -189,7 +208,10 @@ export const logOut = (
       });
     })
     .catch((error) => {
-      alert(error.message);
+      setNotification({
+        title: "Error",
+        message: error.message,
+      });
     })
     .finally(() => setIsLoggingOut(false));
 };
@@ -197,6 +219,12 @@ export const logOut = (
 export const resetPassword = (
   email: string,
   setLoading: Dispatch<SetStateAction<boolean>>,
+  setErrors: Dispatch<
+    SetStateAction<{
+      email: string;
+      password: { arguments?: number; message: string; validation?: string }[];
+    }>
+  >,
   setNotification: Dispatch<
     SetStateAction<{
       title: string;
@@ -234,10 +262,10 @@ export const resetPassword = (
     .catch((error) => {
       const errorMessage = error.message;
       if (errorMessage.includes("user-not-found")) {
-        return setNotification({
-          title: "Error",
-          message: "This email account does not exist.",
-        });
+        return setErrors((currentErrors) => ({
+          ...currentErrors,
+          email: "This email is not registered with us. Please sign up.",
+        }));
       }
       return setNotification({
         title: "Error",

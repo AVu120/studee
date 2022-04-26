@@ -86,7 +86,8 @@ const Me: NextPage<Props> = ({ weeklyPlan }) => {
 
   const clientStartDate = formatDateForClient(serverStartDate);
 
-  const onLogOut = () => logOut(setIsLoggingOut, router, toast);
+  const onLogOut = () =>
+    logOut(setIsLoggingOut, router, setNotification, toast);
   const onSave = () =>
     updateWeeklyPlan(
       weeklyPlanState,
