@@ -4,13 +4,6 @@ import components from "styles/theme/components";
 import global from "styles/theme/global";
 import text from "styles/theme/text";
 
-// const components = {
-//   Button,
-//   Heading,
-//   Divider,
-//   Input,
-// };
-
 const myTheme = extendTheme({
   colors,
   components,

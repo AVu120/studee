@@ -182,12 +182,11 @@ const Landing: NextPage = () => {
           </Button>
           {userAction === "logIn" && (
             <Text
-              textStyle="a"
-              as="a"
+              variant="a"
               mt="2"
               onClick={() => setUserAction("resetPassword")}
               pointerEvents={isLoading ? "none" : "inherit"}
-              color={isLoading ? "grey" : "default"}
+              color={isLoading ? "gray" : "primary"}
             >
               Forgot your password?
             </Text>
@@ -198,11 +197,11 @@ const Landing: NextPage = () => {
                 Already have an account?
               </Text>
               <Text
-                as="a"
+                variant="a"
                 mt="2"
                 onClick={() => changeUserAction("logIn")}
                 pointerEvents={isLoading ? "none" : "inherit"}
-                color={isLoading ? "grey" : "default"}
+                color={isLoading ? "grey" : "primary"}
               >
                 Log in
               </Text>
@@ -210,12 +209,11 @@ const Landing: NextPage = () => {
           )}
           {userAction === "resetPassword" && (
             <Text
-              textStyle="a"
-              as="a"
+              variant="a"
               mt="2"
               onClick={() => setUserAction("logIn")}
               pointerEvents={isLoading ? "none" : "inherit"}
-              color={isLoading ? "grey" : "default"}
+              color={isLoading ? "grey" : "primary"}
             >
               Back
             </Text>
