@@ -11,8 +11,8 @@ interface Props {
   icon: ReactNode;
   options: { title: string; onClick: () => void; isHidden?: boolean }[];
   ariaLabel: string;
-  boxSize: string;
-  style: CSSProperties;
+  boxSize?: string;
+  style?: CSSProperties;
 }
 export const MenuButtonComponent = ({
   icon: Icon,

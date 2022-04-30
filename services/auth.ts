@@ -75,7 +75,7 @@ export const logIn = (
           duration: 5000,
           status: "info",
         });
-        router.push(`/me/week/${getCurrentStartDate()}`);
+        router.push(`/`);
       });
     })
     .catch((error) => {

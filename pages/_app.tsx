@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
-      <Script
+      {/* <Script
         strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
       />
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         page_path: window.location.pathname,
         });
     `}
-      </Script>
+      </Script> */}
 
       <ChakraProvider theme={myTheme}>
         {/* // eslint-disable-next-line react/jsx-props-no-spreading */}

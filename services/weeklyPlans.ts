@@ -86,7 +86,9 @@ export const getWeeklyPlanOnClient = (
       savedWeeklyPlanRef.current = updatedWeeklyState;
       setWeeklyPlanState(updatedWeeklyState);
       setHasUnsavedChanged(false);
-      return router.push(`/me/week/${startDate}`, undefined, { shallow: true });
+      return router.push(`/me/schedule/week/${startDate}`, undefined, {
+        shallow: true,
+      });
     })
     .catch((error) => {
       setNotification({ title: "Error", message: error.message });

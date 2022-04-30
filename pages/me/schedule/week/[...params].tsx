@@ -35,7 +35,7 @@ type TDiscardUnsavedChangesActions = "showNextWeek" | "showLastWeek" | "logOut";
 const Week: NextPage<Props> = ({ weeklyPlan }) => {
   const router = useRouter();
 
-  /** Start date that is set when the page is loaded but weeklyPlan can't be found in the db.
+  /**
    * Server start date is in format "YYYY/MM/DD".
    */
   let serverStartDate: string;
