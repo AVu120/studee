@@ -76,3 +76,31 @@ export const getPreviousStartDate = (startDate: string) => {
  * @returns today's day of the week e.g. "monday".
  */
 export const getCurrentDayOfWeek = () => daysOfWeek[new Date().getDay()];
+
+/**
+ *
+ * @param date - Date in "YYYY/MM/DD" format.
+ * @returns Boolean - True if date is the start of a week (Monday), false otherwise.
+ */
+export const isStartDate = (date: string) => {
+  const dateObject = getDateObject(date);
+
+  return dateObject.getDay() === 1;
+};
+
+/**
+ * @param date - Date in "YYYY/MM/DD" format.
+ * @returns Date of the most recent Monday in "YYYY/MM/DD" format relative to the input date (return same as input date if input is a Monday, otherwise return the Monday in the prior week).
+ */
+export const getClosestStartDate = (date: string) => {
+  const dateObject = getDateObject(date);
+
+  if (dateObject.getDay() === 1)
+    return convertDateObjToStrServerFormat(dateObject);
+
+  let offsetDaysToStartDate = dateObject.getDay() - 1;
+  if (offsetDaysToStartDate < 0) offsetDaysToStartDate += 7;
+  dateObject.setDate(dateObject.getDate() - offsetDaysToStartDate);
+
+  return convertDateObjToStrServerFormat(dateObject);
+};

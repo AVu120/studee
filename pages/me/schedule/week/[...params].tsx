@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "services/auth";
 import { getWeeklyPlanOnClient, updateWeeklyPlan } from "services/weeklyPlans";
-import styles from "styles/pages/me/schedule/Week.module.scss";
+import styles from "styles/pages/me/schedule/week/Index.module.scss";
 import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
 import {
   formatDateForClient,
@@ -19,6 +19,7 @@ import {
   getDateInUrlPath,
   getNextStartDate,
   getPreviousStartDate,
+  isStartDate,
 } from "utils/helpers/dateTime";
 import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
@@ -266,8 +267,17 @@ export const getServerSideProps: GetServerSideProps = async ({
       const { user_id: userId } = userData;
 
       const { params } = query as { params: string[] };
+
       const startDate = `${params[0]}/${params[1]}/${params[2]}`;
 
+      if (!isStartDate(startDate)) {
+        return {
+          redirect: {
+            destination: `/me/schedule/week/not-found?startDate=${startDate}`,
+            permanent: false,
+          },
+        };
+      }
       const weeklyPlan = await getWeeklyPlanOnServer({ userId, startDate });
 
       return {

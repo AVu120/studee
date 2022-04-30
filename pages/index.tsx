@@ -258,7 +258,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (userData) {
     return {
       redirect: {
-        destination: `/me/week/${getCurrentStartDate()}`,
+        destination: `/me/schedule/week/${getCurrentStartDate()}`,
         permanent: false,
       },
     };

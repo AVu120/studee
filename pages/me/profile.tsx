@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 
-const Landing: NextPage = () => (
+const Profile: NextPage = () => (
   <div>
     <Head>
       <title>Profile</title>
@@ -17,4 +17,4 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => ({
   props: {},
 });
 
-export default Landing;
+export default Profile;
