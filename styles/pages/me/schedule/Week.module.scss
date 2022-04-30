@@ -1,5 +1,5 @@
 
-%header {
+.header {
   display: flex;
   background-color: var(--bgColor);
   justify-content: space-between;
@@ -8,13 +8,10 @@
   padding: 1rem;
   position: fixed;
   z-index: 1;
-
-}
-.header {
-  @extend %header;
   top: 0;
   height: 5rem;
 }
+
 .main {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -25,12 +22,4 @@
 .form {
   display: flex;
   flex-direction: column;
-}
-
-.footer {
-  @extend %header;
-  bottom: 0;
-  height: 3rem;
-  font-weight: bold;
-  // margin-top: 10rem;
 }

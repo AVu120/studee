@@ -1,12 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  HStack,
-  IconButton,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { HStack, IconButton, Text, useToast } from "@chakra-ui/react";
+import { Header } from "components/common/Header";
 import { Acknowledgement } from "components/common/modals/Acknowledgement";
 import { ConfirmPrompt } from "components/common/modals/ConfirmPrompt";
 import { WarningPrompt } from "components/common/modals/WarningPrompt";
@@ -17,8 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { logOut } from "services/auth";
 import { getWeeklyPlanOnClient, updateWeeklyPlan } from "services/weeklyPlans";
-import styles from "styles/pages/me/Week.module.scss";
-import colors from "styles/theme/colors";
+import styles from "styles/pages/me/schedule/Week.module.scss";
 import { createEmptyWeeklyPlan } from "utils/constants/weeklyPlans";
 import {
   formatDateForClient,
@@ -29,8 +22,8 @@ import {
 } from "utils/helpers/dateTime";
 import { IWeeklyPlan } from "utils/types/weeklyPlans";
 
-import { getUserData } from "../../api/user";
-import { getWeeklyPlanOnServer } from "../../api/weeklyPlans";
+import { getUserData } from "../../../api/user";
+import { getWeeklyPlanOnServer } from "../../../api/weeklyPlans";
 
 interface Props {
   weeklyPlan: IWeeklyPlan | null;
@@ -138,104 +131,84 @@ const Week: NextPage<Props> = ({ weeklyPlan }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header
-        className={styles.header}
-        // @ts-ignore
-        style={{ "--bgColor": colors.secondary }}
-      >
-        <Box position="relative">
-          <Button
-            type="submit"
-            variant="primary"
-            onClick={onSave}
-            disabled={!hasUnsavedChanges || isSaving}
-          >
-            {isSaving ? "Saving..." : "Save"}
-          </Button>
-          {hasUnsavedChanges && (
-            <Text fontSize="xs" width="max-content" position="absolute">
-              You have unsaved changes...
-            </Text>
-          )}
-        </Box>
-        <HStack>
-          <IconButton
-            variant="outline"
-            aria-label="Show last week"
-            isRound
-            borderColor="transparent"
-            position="relative"
-            right={{
-              base: "-4",
-              md: "-3",
-              lg: "-2",
-              xl: "-1",
-            }}
-            _hover={{ bg: "transparent" }}
-            icon={
-              <ChevronLeftIcon
-                fontSize={{
-                  base: "2rem",
-                  md: "2.5rem",
-                  lg: "3rem",
-                }}
-              />
-            }
-            onClick={
-              hasUnsavedChanges
-                ? () => setDiscardUnsavedChangesAction("showLastWeek")
-                : onShowPreviousWeek
-            }
-            isLoading={isLoadingPriorWeekData}
-          />
-          <Text
-            as="h1"
-            textAlign="center"
-            margin="0px"
-          >{`Week of ${clientStartDate}`}</Text>
-          <IconButton
-            variant="outline"
-            aria-label="Show next week"
-            borderColor="transparent"
-            isRound
-            position="relative"
-            left={{
-              base: "-4",
-              md: "-3",
-              lg: "-2",
-              xl: "-1",
-            }}
-            _hover={{ bg: "transparent" }}
-            icon={
-              <ChevronRightIcon
-                fontSize={{
-                  base: "2rem",
-                  md: "2.5rem",
-                  lg: "3rem",
-                }}
-              />
-            }
-            onClick={
-              hasUnsavedChanges
-                ? () => setDiscardUnsavedChangesAction("showNextWeek")
-                : onShowNextWeek
-            }
-            isLoading={isLoadingNextWeekData}
-          />
-        </HStack>
-        <Button
-          type="submit"
-          variant="secondary"
-          onClick={
-            hasUnsavedChanges
-              ? () => setDiscardUnsavedChangesAction("logOut")
-              : () => setIsAttemptingToLogOut(true)
-          }
-          disabled={isLoggingOut}
-        >
-          {isLoggingOut ? "Loading..." : "Log Out "}
-        </Button>
-      </header>
+      <Header
+        onSave={onSave}
+        hasUnsavedChanges={hasUnsavedChanges}
+        isSaving={isSaving}
+        CentreComponent={
+          <HStack>
+            <IconButton
+              variant="outline"
+              aria-label="Show last week"
+              isRound
+              borderColor="transparent"
+              position="relative"
+              right={{
+                base: "-4",
+                md: "-3",
+                lg: "-2",
+                xl: "-1",
+              }}
+              _hover={{ bg: "transparent" }}
+              icon={
+                <ChevronLeftIcon
+                  fontSize={{
+                    base: "2rem",
+                    md: "2.5rem",
+                    lg: "3rem",
+                  }}
+                />
+              }
+              onClick={
+                hasUnsavedChanges
+                  ? () => setDiscardUnsavedChangesAction("showLastWeek")
+                  : onShowPreviousWeek
+              }
+              isLoading={isLoadingPriorWeekData}
+            />
+            <Text
+              as="h1"
+              textAlign="center"
+              margin="0px"
+            >{`Week of ${clientStartDate}`}</Text>
+            <IconButton
+              variant="outline"
+              aria-label="Show next week"
+              borderColor="transparent"
+              isRound
+              position="relative"
+              left={{
+                base: "-4",
+                md: "-3",
+                lg: "-2",
+                xl: "-1",
+              }}
+              _hover={{ bg: "transparent" }}
+              icon={
+                <ChevronRightIcon
+                  fontSize={{
+                    base: "2rem",
+                    md: "2.5rem",
+                    lg: "3rem",
+                  }}
+                />
+              }
+              onClick={
+                hasUnsavedChanges
+                  ? () => setDiscardUnsavedChangesAction("showNextWeek")
+                  : onShowNextWeek
+              }
+              isLoading={isLoadingNextWeekData}
+            />
+          </HStack>
+        }
+        isLoggingOut={isLoggingOut}
+        onLogOut={
+          hasUnsavedChanges
+            ? () => setDiscardUnsavedChangesAction("logOut")
+            : () => setIsAttemptingToLogOut(true)
+        }
+      />
 
       <main className={styles.main}>
         <Planner
@@ -274,24 +247,6 @@ const Week: NextPage<Props> = ({ weeklyPlan }) => {
           action="Log Out"
         />
       </main>
-
-      <footer
-        className={styles.footer}
-        // @ts-ignore
-        style={{ "--bgColor": colors.secondary }}
-      >
-        <span>Studee App</span>
-        <span>
-          Created by{" "}
-          <a
-            href="https://www.linkedin.com/in/anthony-hien-vu/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Anthony Hien Vu
-          </a>
-        </span>
-      </footer>
     </div>
   );
 };
