@@ -213,29 +213,45 @@ const UnmemoizedDailyPlan = ({
           </Table>
         </TableContainer>
         <VStack pb="3">
-          <Heading as="h3" size="xs" mt="2">
+          <Heading
+            size="xs"
+            mt="2"
+            id={`${dayOfWeek}-post-study-award-label`}
+            textDecoration="none"
+          >
             Post-Study Award
           </Heading>
           <Textarea
             resize="none"
             value={data?.postStudyAward || ""}
             onChange={changeNotes("postStudyAward")}
+            aria-labelledby={`${dayOfWeek}-post-study-award-label`}
           />
-          <Heading as="h3" size="xs">
+          <Heading
+            size="xs"
+            id={`${dayOfWeek}-achievements-label`}
+            textDecoration="none"
+          >
             Achievements
           </Heading>
           <Textarea
             resize="none"
             value={data?.achievements || ""}
             onChange={changeNotes("achievements")}
+            aria-labelledby={`${dayOfWeek}-achievements-label`}
           />
-          <Heading as="h3" size="xs">
+          <Heading
+            size="xs"
+            id={`${dayOfWeek}-reflections-label`}
+            textDecoration="none"
+          >
             Reflections
           </Heading>
           <Textarea
             resize="none"
             value={data?.reflections || ""}
             onChange={changeNotes("reflections")}
+            aria-labelledby={`${dayOfWeek}-reflections-label`}
           />
         </VStack>
       </Card>

@@ -9,7 +9,13 @@ interface Props {
 }
 export const Notes = ({ onChange, value }: Props) => (
   <Card>
-    <Heading as="h3" size="xs" textDecoration="underline" textAlign="center">
+    <Heading
+      as="h3"
+      size="xs"
+      textDecoration="underline"
+      textAlign="center"
+      id="notes-label"
+    >
       NOTES
     </Heading>
     <Textarea
@@ -21,6 +27,7 @@ export const Notes = ({ onChange, value }: Props) => (
       resize="none"
       value={value}
       onChange={onChange}
+      aria-labelledby="notes-label"
     />
   </Card>
 );
