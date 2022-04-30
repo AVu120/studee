@@ -1,6 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
-import Script from "next/script";
+// import Script from "next/script";
 import myTheme from "styles/theme/index";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -24,7 +24,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Script> */}
 
       <ChakraProvider theme={myTheme}>
-        {/* // eslint-disable-next-line react/jsx-props-no-spreading */}
         <Component {...pageProps} />
       </ChakraProvider>
     </>

@@ -1,6 +1,6 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Box, Button, Text } from "@chakra-ui/react";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import colors from "styles/theme/colors";
 
