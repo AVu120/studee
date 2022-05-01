@@ -41,14 +41,15 @@ export const MenuButtonComponent = ({
     />
     <MenuList>
       {options.map(({ title, onClick, isHidden, href }) => (
-        <MenuItem onClick={onClick} hidden={isHidden} key={title}>
-          {href ? (
-            <Text as="a" href={href} textDecoration="none" color="inherit">
-              {title}
-            </Text>
-          ) : (
-            title
-          )}
+        <MenuItem
+          as={href ? "a" : "button"}
+          onClick={onClick}
+          // @ts-ignore
+          href={href}
+          hidden={isHidden}
+          key={title}
+        >
+          {title}
         </MenuItem>
       ))}
     </MenuList>
