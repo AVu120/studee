@@ -4,12 +4,18 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
 } from "@chakra-ui/react";
 import type { CSSProperties, ReactNode } from "react";
 
 interface Props {
   icon: ReactNode;
-  options: { title: string; onClick: () => void; isHidden?: boolean }[];
+  options: {
+    title: string;
+    onClick: () => void;
+    isHidden?: boolean;
+    href?: string;
+  }[];
   ariaLabel: string;
   boxSize?: string;
   style?: CSSProperties;
@@ -34,9 +40,15 @@ export const MenuButtonComponent = ({
       style={style}
     />
     <MenuList>
-      {options.map(({ title, onClick, isHidden }) => (
+      {options.map(({ title, onClick, isHidden, href }) => (
         <MenuItem onClick={onClick} hidden={isHidden} key={title}>
-          {title}
+          {href ? (
+            <Text as="a" href={href} textDecoration="none" color="inherit">
+              {title}
+            </Text>
+          ) : (
+            title
+          )}
         </MenuItem>
       ))}
     </MenuList>

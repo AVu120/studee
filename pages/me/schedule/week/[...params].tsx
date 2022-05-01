@@ -44,7 +44,8 @@ const Week: NextPage<Props> = ({ weeklyPlan }) => {
   } else {
     serverStartDate = getCurrentStartDate();
   }
-
+  const nextStartDate = getNextStartDate(serverStartDate);
+  const previousStartDate = getPreviousStartDate(serverStartDate);
   /** Last weeklyPlan record that user saved, used to determine if there's any local unsaved changes. */
   const savedWeeklyPlanRef = useRef(
     weeklyPlan || createEmptyWeeklyPlan(serverStartDate)
@@ -93,7 +94,6 @@ const Week: NextPage<Props> = ({ weeklyPlan }) => {
     );
 
   const onShowNextWeek = () => {
-    const nextStartDate = getNextStartDate(serverStartDate);
     getWeeklyPlanOnClient(
       nextStartDate,
       setWeeklyPlanState,
@@ -106,7 +106,6 @@ const Week: NextPage<Props> = ({ weeklyPlan }) => {
   };
 
   const onShowPreviousWeek = () => {
-    const previousStartDate = getPreviousStartDate(serverStartDate);
     getWeeklyPlanOnClient(
       previousStartDate,
       setWeeklyPlanState,

@@ -1,7 +1,6 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { Text, useToast, VStack } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "styles/pages/me/schedule/week/NotFound.module.scss";
 import {
@@ -11,6 +10,7 @@ import {
 
 const WeekNotFound: NextPage = () => {
   const router = useRouter();
+  const toast = useToast();
   const { startDate } = router.query;
 
   let alternativeStartDate;
@@ -52,9 +52,21 @@ const WeekNotFound: NextPage = () => {
               ? `Week of ${startDate.replaceAll("/undefined", "")}`
               : "Page"}{" "}
             not found, did you mean to look for&nbsp;
-            <Link href={`/me/schedule/week/${alternativeStartDate}`}>
+            <Text
+              as="a"
+              onClick={() => {
+                toast({
+                  title: `Redirecting...`,
+                  position: "top",
+                  isClosable: true,
+                  duration: 3000,
+                  status: "info",
+                });
+              }}
+              href={`/me/schedule/week/${alternativeStartDate}`}
+            >
               {`week of ${alternativeStartDate}`}
-            </Link>
+            </Text>
             ?
           </Text>
         </VStack>
