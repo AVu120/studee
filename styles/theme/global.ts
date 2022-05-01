@@ -10,7 +10,8 @@ export default {
       boxSizing: "border-box",
     },
     a: {
-      color: "teal.500",
+      color: "primary",
+      textDecoration: "underline",
       _hover: { textDecoration: "underline", cursor: "pointer" },
     },
     h1: {
