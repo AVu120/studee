@@ -45,15 +45,10 @@ export const ConfirmPrompt = ({
           <AlertDialogCloseButton />
           <AlertDialogBody>{prompt}</AlertDialogBody>
           <AlertDialogFooter>
-            <Button
-              onClick={onClose}
-              ref={cancelRef}
-              bg="primary"
-              color="white"
-            >
+            <Button onClick={onClose} ref={cancelRef} variant="primary">
               Cancel
             </Button>
-            <Button onClick={onConfirm} ml={3}>
+            <Button onClick={onConfirm} ml={3} variant="secondary">
               {action}
             </Button>
           </AlertDialogFooter>

@@ -1,5 +1,4 @@
 export default {
-  // TODO: Replace with actual theme colors, these ones are just practice.
   primary: "#319795",
   secondary: "#caedec",
   tertiary: "#FF6F91",

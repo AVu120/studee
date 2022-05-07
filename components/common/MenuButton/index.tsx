@@ -38,6 +38,9 @@ export const MenuButtonComponent = ({
       border="none"
       boxSize={boxSize}
       style={style}
+      _hover={{ bg: "transparent" }}
+      _selected={{ bg: "transparent" }}
+      _active={{ bg: "secondary" }}
     />
     <MenuList>
       {options.map(({ title, onClick, isHidden, href }) => (
