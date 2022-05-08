@@ -3,6 +3,19 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "styles/pages/me/ToDoList.module.scss";
 
+// Create to do list like my mobile app.
+// Will save in ToDoLists mongoDB colletion. _id = userId
+// Data model for user's todoLists
+// const usersToDoList = {
+//   id_: _userId,
+//   toDoLists: {
+//    "a": [{name, isComplete},{name, isComplete}],
+//     "b": [{name, isComplete}],
+//     "c": [],
+//   }
+// }
+// Create folders list page, enable full CRUD.
+// Created nested folders/toDoList page, enable full CRUD.
 const ToDoList: NextPage = () => (
   <div>
     <Head>
