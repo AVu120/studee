@@ -118,7 +118,6 @@ const UnmemoizedDailyPlan = ({
             ...currentWeeklyPlanState[dayOfWeek]?.tasks?.[taskNumber],
             isComplete: false,
             name: "",
-            time: "",
           },
         },
       },
