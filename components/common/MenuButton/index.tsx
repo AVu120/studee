@@ -38,7 +38,7 @@ export const MenuButtonComponent = ({
       border="none"
       boxSize={boxSize}
       style={style}
-      _hover={{ bg: "transparent" }}
+      _hover={{ bg: "secondary" }}
       _selected={{ bg: "transparent" }}
       _active={{ bg: "secondary" }}
     />
